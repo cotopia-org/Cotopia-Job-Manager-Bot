@@ -67,6 +67,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         r = requests.post(url=url, data=payload, headers=headers)
         data = r.json()
         if r.status_code == 201:
-            await interaction.response.send_message("Job Successfully Submitted!")
+            await interaction.response.send_message("Job Successfully Submitted!", ephemeral=True)
         else:
-            await interaction.response.send_message(f"ERROR {r.status_code}\n{data}")
+            await interaction.response.send_message(f"ERROR {r.status_code}\n{data}", ephemeral=True)
