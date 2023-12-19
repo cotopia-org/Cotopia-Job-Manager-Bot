@@ -2,6 +2,7 @@ import discord
 import json
 import requests
 from bot_auth import create_token
+from datetime import datetime
 
 
 
@@ -71,22 +72,50 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             await interaction.response.send_message("Job Successfully Submitted!", ephemeral=True)
             guild = interaction.guild
             channel = guild.get_channel(1186373857062436954)
-            body = str(data['created_at']) + "\n"
+
+            
+            if data["description"]:
+                body = "**Description:**\n" + data["description"] + "\n\n"
+            else:
+                body = "**Description:** " + "-" + "\n\n"
             ws = data['workspace'].replace(guild.name+ "/", "")
-            body = body + "Workspace: " + ws + "\n"
-            body = body + "Description: " + data["description"] + "\n"
-            body = body + "Deadline: " + data["deadline"]
+            if len(ws) > 0:
+                body = body + "**Workspace:** " + ws + "\n"
+            else:
+                body = body + "**Workspace:** " + "-" + "\n"
+            if data['deadline']:
+                deadline = datetime.strptime(data['deadline'], "%Y-%m-%dT%H:%M:%S")
+                body = body + "**Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+            else:
+                body = body + "Deadline: " + "-" + "\n"
+            tags = ""
+            for t in data['tags']:
+                tags = tags + "**[" + t + "]** "
+            body = body + tags
             embed = discord.Embed(title=data['title'], description=body, color=discord.Color.dark_blue())
-            embed.set_author(name = "by <@" + str(data['creator']['discord_user_id']) + ">")
-            await channel.send(embed=embed)
+            created_at = datetime.strptime(data['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+            embed.set_author(name=created_at.strftime("%Y-%m-%d  %H:%M"))
+
+            webhook = await channel.create_webhook(name=interaction.user.name)
+            if (interaction.user.nick is None):
+                the_name = interaction.user.name
+            else:
+                the_name = interaction.user.nick
+            
+            view = JobView()
+            await webhook.send(
+                embed=embed, username=the_name, avatar_url=interaction.user.avatar, view=view)
+            
+            webhooks = await channel.webhooks()
+            for w in webhooks:
+                await w.delete()
+            
+
         else:
             await interaction.response.send_message(f"ERROR {r.status_code}\n{data}", ephemeral=True)
+
+class JobView(discord.ui.View):
     
-    def job_json_to_text(data: dict, guild_name: str):
-        ws = data['workspace'].replace(guild_name + "/", "")
-        body = "Workspace: " + ws + "\n"
-        body = body + "Description: " + data["description"] + "\n"
-        body = body + "Deadline: " + data["deadline"]
-        embed = discord.Embed(title=data['title'], description=body, color=discord.Color.dark_blue())
-        embed.set_author(name = "by <@" + data['creator']['discord_user_id'] + ">", url=data['created_at'])
-        return embed
+    @discord.ui.button(label="Accept", style=discord.ButtonStyle.primary)
+    async def accept(self, interaction: discord.Integration, button: discord.ui.Button):
+        pass
