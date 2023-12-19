@@ -66,7 +66,27 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         url = "https://jobs.cotopia.social/bot/job"
         r = requests.post(url=url, data=payload, headers=headers)
         data = r.json()
+
         if r.status_code == 201:
             await interaction.response.send_message("Job Successfully Submitted!", ephemeral=True)
+            guild = interaction.guild
+            channel = guild.get_channel(1186373857062436954)
+            body = str(data['created_at']) + "\n"
+            ws = data['workspace'].replace(guild.name+ "/", "")
+            body = body + "Workspace: " + ws + "\n"
+            body = body + "Description: " + data["description"] + "\n"
+            body = body + "Deadline: " + data["deadline"]
+            embed = discord.Embed(title=data['title'], description=body, color=discord.Color.dark_blue())
+            embed.set_author(name = "by <@" + str(data['creator']['discord_user_id']) + ">")
+            await channel.send(embed=embed)
         else:
             await interaction.response.send_message(f"ERROR {r.status_code}\n{data}", ephemeral=True)
+    
+    def job_json_to_text(data: dict, guild_name: str):
+        ws = data['workspace'].replace(guild_name + "/", "")
+        body = "Workspace: " + ws + "\n"
+        body = body + "Description: " + data["description"] + "\n"
+        body = body + "Deadline: " + data["deadline"]
+        embed = discord.Embed(title=data['title'], description=body, color=discord.Color.dark_blue())
+        embed.set_author(name = "by <@" + data['creator']['discord_user_id'] + ">", url=data['created_at'])
+        return embed
