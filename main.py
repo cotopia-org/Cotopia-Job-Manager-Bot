@@ -1,11 +1,8 @@
-import json
-
 import discord
-import requests
 from discord.ext import commands
 
 import settings
-from bot_auth import create_token
+from modals.submit import JobSubmitModal
 
 logger = settings.logging.getLogger("bot")
 
@@ -24,28 +21,23 @@ def run():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})")
         await bot.tree.sync()
 
-    @bot.hybrid_command()
-    async def submit(ctx):
+    @bot.tree.command()
+    async def submit(interaction: discord.Interaction):
         d = {}
-        d["discord_guild"] = ctx.guild.id
-        d["discord_id"] = ctx.author.id
-        d["discord_name"] = ctx.author.name
-        d["guild_name"] = ctx.guild.name
-        roles = ctx.author.roles
+        d["discord_guild"] = interaction.guild_id
+        d["discord_id"] = interaction.user.id
+        d["discord_name"] = interaction.user.name
+        d["guild_name"] = interaction.guild.name
+        roles = interaction.user.roles
         roles_list = []
         for r in roles:
             roles_list.append(r.name)
         d["discord_roles"] = roles_list
 
-        token = create_token(d)
-        headers = {"Authorization": token}
-        payload_dic = {"title": "Job Tilte", "workspace": d["guild_name"]}
-        payload = json.dumps(payload_dic)
-        url = "https://jobs.cotopia.social/bot/job"
-        r = requests.post(url=url, data=payload, headers=headers)
-        data = r.json()
+        job_submit_modal = JobSubmitModal()
+        job_submit_modal.users_info = d
 
-        await ctx.send(data)
+        await interaction.response.send_modal(job_submit_modal)
 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
