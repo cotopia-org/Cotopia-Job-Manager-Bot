@@ -1,3 +1,4 @@
+import logging  # noqa: F401
 import os
 from logging.config import dictConfig
 
