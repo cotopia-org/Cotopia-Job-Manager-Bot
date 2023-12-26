@@ -5,8 +5,10 @@ import discord
 import requests
 
 from bot_auth import create_token
-from views.submitted_job import SubmittedJobView
 from utils.job_id_coder import gen_code
+from views.submitted_job import SubmittedJobView
+
+LINE = "\n-----------------------------------------------------\n"
 
 
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
@@ -77,12 +79,12 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
             # created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
             # post_date = created_at.strftime("%Y-%m-%d  %H:%M")
-            title = "**" + data["title"] + "**"
+            title = "##" + data["title"]
 
             if data["description"]:
-                body = "**Description:**\n" + data["description"] + "\n\n"
+                body = "**Description:**\n" + data["description"] + "\n"
             else:
-                body = "**Description:** " + "-" + "\n\n"
+                body = "**Description:** " + "-" + "\n"
             ws = data["workspace"].replace(guild.name + "/", "")
             if len(ws) > 0:
                 body = body + "**Workspace:** " + ws + "\n"
@@ -103,9 +105,9 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 for t in data["tags"]:
                     tags = tags + "**[" + t + "]** "
             body = body + tags
-            body = body + "\n\nid: " + gen_code(data['id'])
-            
-            content = title + "\n\n" + body
+            body = body + LINE + "id: " + gen_code(data["id"])
+
+            content = LINE + title + LINE + body
 
             webhook = await channel.create_webhook(name=interaction.user.name)
             if interaction.user.nick is None:
