@@ -1,8 +1,10 @@
 import discord
-from bot_auth import create_token
 import requests
-from utils.job_id_coder import decode, PREFIX
 
+from bot_auth import create_token
+from utils.job_id_coder import PREFIX, decode
+
+LINE = "-----------------------------------------------------\n"
 
 
 class SubmittedJobView(discord.ui.View):
@@ -22,8 +24,8 @@ class SubmittedJobView(discord.ui.View):
         headers = {"Authorization": create_token(users_info)}
 
         text = interaction.message.content
-        s = text.split("id: " + PREFIX, 1)[1]
-        job_id = decode(PREFIX + s)
+        s = text.split("id: " + PREFIX, 1)
+        job_id = decode(PREFIX + s[1])
 
         url = f"https://jobs.cotopia.social/bot/accept/{job_id}"
 
@@ -31,5 +33,20 @@ class SubmittedJobView(discord.ui.View):
         data = r.json()
         status_code = r.status_code
 
-        await interaction.response.send_message(f"status code: {status_code}\n{data}")
-
+        if status_code == 201:
+            new_text = (
+                s[0]
+                + LINE
+                + "Accepted by:\n"
+                + interaction.user.mention
+                + "\n"
+                + LINE
+                + "id: "
+                + PREFIX
+                + s[1]
+            )
+            await interaction.response.edit_message(content=new_text)
+        else:
+            await interaction.response.send_message(
+                f"status code: {status_code}\n{data}", ephemeral=True
+            )
