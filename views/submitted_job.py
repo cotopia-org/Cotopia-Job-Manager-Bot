@@ -36,7 +36,6 @@ class SubmittedJobView(discord.ui.View):
         if status_code == 201:
             new_text = (
                 s[0]
-                + LINE
                 + "Accepted by:\n"
                 + interaction.user.mention
                 + "\n"
