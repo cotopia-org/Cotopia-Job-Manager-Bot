@@ -75,6 +75,10 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             guild = interaction.guild
             channel = guild.get_channel(1186373857062436954)
 
+            # created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            # post_date = created_at.strftime("%Y-%m-%d  %H:%M")
+            title = "**" + data["title"] + "**"
+
             if data["description"]:
                 body = "**Description:**\n" + data["description"] + "\n\n"
             else:
@@ -95,15 +99,13 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             else:
                 body = body + "Deadline: " + "-" + "\n"
             tags = ""
-            for t in data["tags"]:
-                tags = tags + "**[" + t + "]** "
+            if data["tags"]:
+                for t in data["tags"]:
+                    tags = tags + "**[" + t + "]** "
             body = body + tags
             body = body + "\n\nid: " + gen_code(data['id'])
-            embed = discord.Embed(
-                title=data["title"], description=body, color=discord.Color.dark_blue()
-            )
-            created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
-            embed.set_author(name=created_at.strftime("%Y-%m-%d  %H:%M"))
+            
+            content = title + "\n\n" + body
 
             webhook = await channel.create_webhook(name=interaction.user.name)
             if interaction.user.nick is None:
@@ -113,7 +115,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
             view = SubmittedJobView()
             await webhook.send(
-                embed=embed,
+                content=content,
                 username=the_name,
                 avatar_url=interaction.user.avatar,
                 view=view,
