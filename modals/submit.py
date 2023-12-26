@@ -6,6 +6,7 @@ import requests
 
 from bot_auth import create_token
 from views.submitted_job import SubmittedJobView
+from utils.job_id_coder import gen_code
 
 
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
@@ -97,6 +98,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             for t in data["tags"]:
                 tags = tags + "**[" + t + "]** "
             body = body + tags
+            body = body + "\n\nid: " + gen_code(data['id'])
             embed = discord.Embed(
                 title=data["title"], description=body, color=discord.Color.dark_blue()
             )
