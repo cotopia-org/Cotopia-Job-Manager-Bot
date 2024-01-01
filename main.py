@@ -60,6 +60,10 @@ def run():
         data = r.json()
         status_code = r.status_code
         await ctx.send(f"status code: {status_code}\n{data}")
+    
+    @bot.tree.context_menu(name="Pause Task!")
+    async def pause_task(interaction: discord.Interaction, message: discord.Message):
+        await interaction.response.send_message("this is not a task!")
 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
