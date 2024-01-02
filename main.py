@@ -10,6 +10,7 @@ import settings
 from bot_auth import create_token
 from briefing import briefing
 from modals.submit import JobSubmitModal
+from views.ask_brief import AskBriefView
 
 logger = settings.logging.getLogger("bot")
 
@@ -104,17 +105,16 @@ def run():
 
         async def ask_for_brief():
             await asyncio.sleep(8)  # 8 seconds
+            ask_view = AskBriefView()
             try:
                 await guild.system_channel.send(
-                    "Welcome "
-                    + member.mention
-                    + "!\nWhat are you going to do today?\nReply to this message to submit a brief."
+                    "Welcome " + member.mention + "!\nWhat are you going to do today?",
+                    view=ask_view,
                 )
             except:  # noqa: E722
                 await guild.text_channels[0].send(
-                    "Welcome "
-                    + member.mention
-                    + "!\nWhat are you going to do today?\nReply to this message to submit a brief."
+                    "Welcome " + member.mention + "!\nWhat are you going to do today?",
+                    view=ask_view,
                 )
 
         # When user leaves voice channel
