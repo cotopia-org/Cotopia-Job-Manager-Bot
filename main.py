@@ -106,6 +106,7 @@ def run():
         async def ask_for_brief():
             await asyncio.sleep(8)  # 8 seconds
             ask_view = AskBriefView()
+            ask_view.addressee = member
             try:
                 await guild.system_channel.send(
                     "Welcome " + member.mention + "!\nWhat are you going to do today?",
