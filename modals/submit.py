@@ -75,12 +75,13 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             await interaction.response.send_message(
                 "Job Successfully Submitted!", ephemeral=True
             )
+            print(f"status code: {r.status_code}\n{data}")
             guild = interaction.guild
             channel = guild.get_channel(1186373857062436954)
 
             # created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
             # post_date = created_at.strftime("%Y-%m-%d  %H:%M")
-            title = "##" + data["title"]
+            title = "## " + data["title"]
 
             if data["description"]:
                 body = "**Description:**\n" + data["description"] + "\n"
@@ -127,7 +128,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             webhooks = await channel.webhooks()
             for w in webhooks:
                 await w.delete()
-            
+
             # self accept
             if self.self_accept:
                 job_id = data["id"]
@@ -135,16 +136,35 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 self_accept_req = requests.post(url=url, headers=headers)
                 self_accept_data = self_accept_req.json()
                 if self_accept_req.status_code == 201:
-                    await interaction.response.send_message(
-                        "Job Successfully Accepted!", ephemeral=True
+                    # await interaction.response.send_message(
+                    #     "Job Successfully Accepted!", ephemeral=True
+                    # )
+                    print(f"status code: {self_accept_req.status_code}\n{self_accept_data}")
+                    url = f"https://jobs.cotopia.social/bot/accepted_jobs/{job_id}"
+                    pl = {"acceptor_status": "doing"}
+                    update_status_req = requests.put(
+                        url=url, json=pl, headers=headers
                     )
+                    update_status_data = update_status_req.json()
+                    if update_status_req.status_code == 200:
+                        # await interaction.response.send_message(
+                        #     "Job Status Successfully Changed To 'doing!", ephemeral=True
+                        # )
+                        print(f"status code: {update_status_req.status_code}\n{update_status_data}")
+                    else:
+                        # await interaction.response.send_message(
+                        #     f"status code: {update_status_req.status_code}\n{update_status_data}"
+                        # )
+                        print(f"status code: {update_status_req.status_code}\n{update_status_data}")
                 else:
-                    await interaction.response.send_message(
-                        f"status code: {self_accept_req.status_code}\n{self_accept_data}",
-                        ephemeral=True,
-                    )
+                    # await interaction.response.send_message(
+                    #     f"status code: {self_accept_req.status_code}\n{self_accept_data}",
+                    #     ephemeral=True,
+                    # )
+                    print(f"status code: {self_accept_req.status_code}\n{self_accept_data}")
 
         else:
             await interaction.response.send_message(
                 f"ERROR {r.status_code}\n{data}", ephemeral=True
             )
+            print(f"ERROR {r.status_code}\n{data}")
