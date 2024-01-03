@@ -1,4 +1,6 @@
 import discord
+from modals.submit import JobSubmitModal
+
 
 
 class AskBriefView(discord.ui.View):
@@ -9,7 +11,22 @@ class AskBriefView(discord.ui.View):
     @discord.ui.button(label="Write A Task", style=discord.ButtonStyle.primary)
     async def write(self, interaction: discord.Integration, button: discord.ui.Button):
         if self.addressee == interaction.user:
-            await interaction.response.send_message("Ok!", ephemeral=True)
+            d = {}
+            d["discord_guild"] = interaction.guild_id
+            d["discord_id"] = interaction.user.id
+            d["discord_name"] = interaction.user.name
+            d["guild_name"] = interaction.guild.name
+            roles = interaction.user.roles
+            roles_list = []
+            for r in roles:
+                roles_list.append(r.name)
+            d["discord_roles"] = roles_list
+
+            job_submit_modal = JobSubmitModal()
+            job_submit_modal.users_info = d
+            job_submit_modal.self_accept = True
+
+            await interaction.response.send_modal(job_submit_modal)
         else:
             await interaction.response.send_message(
                 "You are not the addressee!", ephemeral=True
