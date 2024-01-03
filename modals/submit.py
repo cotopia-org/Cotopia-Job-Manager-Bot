@@ -13,6 +13,7 @@ LINE = "\n-----------------------------------------------------\n"
 
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     users_info = None
+    self_accept = False
 
     job_title = discord.ui.TextInput(
         style=discord.TextStyle.short,
@@ -126,6 +127,22 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             webhooks = await channel.webhooks()
             for w in webhooks:
                 await w.delete()
+            
+            # self accept
+            if self.self_accept:
+                job_id = data["id"]
+                url = f"https://jobs.cotopia.social/bot/accept/{job_id}"
+                self_accept_req = requests.post(url=url, headers=headers)
+                self_accept_data = self_accept_req.json()
+                if self_accept_req.status_code == 201:
+                    await interaction.response.send_message(
+                        "Job Successfully Accepted!", ephemeral=True
+                    )
+                else:
+                    await interaction.response.send_message(
+                        f"status code: {self_accept_req.status_code}\n{self_accept_data}",
+                        ephemeral=True,
+                    )
 
         else:
             await interaction.response.send_message(
