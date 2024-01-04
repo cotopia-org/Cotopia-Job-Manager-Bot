@@ -47,7 +47,7 @@ def run():
                 message.reference.message_id
             )
             if replied_to.author == bot.user:
-                if "Reply to this message to submit a brief." in replied_to.content:
+                if "!\nWhat are you going to do today?" in replied_to.content:
                     if message.author in replied_to.mentions:
                         briefing.write_to_db(
                             brief=message.content,
