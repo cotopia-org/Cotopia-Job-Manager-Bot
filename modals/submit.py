@@ -8,8 +8,6 @@ from bot_auth import create_token
 from utils.job_id_coder import gen_code
 from views.submitted_job import SubmittedJobView
 
-LINE = "\n-----------------------------------------------------\n"
-
 
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     users_info = None
@@ -54,6 +52,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        post_data = {}
         payload_dic = {}
         payload_dic["title"] = self.job_title.value
         payload_dic["workspace"] = interaction.guild.name + "/" + self.workspace.value
@@ -76,13 +75,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 "Job Successfully Submitted!", ephemeral=True
             )
             print(f"status code: {r.status_code}\n{data}")
-
-            self.post_the_job_to_channel(
-                guild=interaction.guild,
-                channel=interaction.guild.get_channel(1186373857062436954),
-                user=interaction.user,
-                data=data,
-            )
+            post_data = data
 
             # self accept
             if self.self_accept:
@@ -91,35 +84,24 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 self_accept_req = requests.post(url=url, headers=headers)
                 self_accept_data = self_accept_req.json()
                 if self_accept_req.status_code == 201:
-                    # await interaction.response.send_message(
-                    #     "Job Successfully Accepted!", ephemeral=True
-                    # )
                     print(
                         f"status code: {self_accept_req.status_code}\n{self_accept_data}"
                     )
+                    post_data["acceptors"] = [interaction.user]
+
                     url = f"https://jobs.cotopia.social/bot/accepted_jobs/{job_id}"
                     pl = {"acceptor_status": "doing"}
                     update_status_req = requests.put(url=url, json=pl, headers=headers)
                     update_status_data = update_status_req.json()
                     if update_status_req.status_code == 200:
-                        # await interaction.response.send_message(
-                        #     "Job Status Successfully Changed To 'doing!", ephemeral=True
-                        # )
                         print(
                             f"status code: {update_status_req.status_code}\n{update_status_data}"
                         )
                     else:
-                        # await interaction.response.send_message(
-                        #     f"status code: {update_status_req.status_code}\n{update_status_data}"
-                        # )
                         print(
                             f"status code: {update_status_req.status_code}\n{update_status_data}"
                         )
                 else:
-                    # await interaction.response.send_message(
-                    #     f"status code: {self_accept_req.status_code}\n{self_accept_data}",
-                    #     ephemeral=True,
-                    # )
                     print(
                         f"status code: {self_accept_req.status_code}\n{self_accept_data}"
                     )
@@ -130,9 +112,38 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             )
             print(f"ERROR {r.status_code}\n{data}")
 
+        if post_data != {}:
+            await self.post_the_job_to_channel(
+                guild=interaction.guild,
+                channel=interaction.guild.get_channel(1186373857062436954),
+                user=interaction.user,
+                data=post_data,
+            )
+
     async def post_the_job_to_channel(self, guild, channel, user, data):
-        # created_at = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
-        # post_date = created_at.strftime("%Y-%m-%d  %H:%M")
+        content = self.create_job_post_text(guild=guild, data=data)
+
+        webhook = await channel.create_webhook(name=user.name)
+        if user.nick is None:
+            the_name = user.name
+        else:
+            the_name = user.nick
+
+        view = SubmittedJobView()
+        await webhook.send(
+            content=content,
+            username=the_name,
+            avatar_url=user.avatar,
+            view=view,
+        )
+
+        webhooks = await channel.webhooks()
+        for w in webhooks:
+            await w.delete()
+
+    def create_job_post_text(self, guild, data):
+        LINE = "\n-----------------------------------------------------\n"
+
         title = "## " + data["title"]
 
         if data["description"]:
@@ -154,24 +165,14 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             for t in data["tags"]:
                 tags = tags + "**[" + t + "]** "
         body = body + tags
-        body = body + LINE + "id: " + gen_code(data["id"])
 
-        content = LINE + title + LINE + body
-
-        webhook = await channel.create_webhook(name=user.name)
-        if user.nick is None:
-            the_name = user.name
+        if data["acceptors"]:
+            acceptors = "**Accepted By:**\n" + data["acceptors"][0].mention
         else:
-            the_name = user.nick
+            acceptors = "**Accepted By:** " + "-" + "\n"
 
-        view = SubmittedJobView()
-        await webhook.send(
-            content=content,
-            username=the_name,
-            avatar_url=user.avatar,
-            view=view,
-        )
+        id_line = "id: " + gen_code(data["id"])
 
-        webhooks = await channel.webhooks()
-        for w in webhooks:
-            await w.delete()
+        content = title + LINE + body + LINE + acceptors + LINE + id_line
+
+        return content
