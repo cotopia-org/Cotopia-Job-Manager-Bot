@@ -8,7 +8,7 @@ class AskBriefView(discord.ui.View):
         super().__init__(timeout=timeout)
         self.addressee = None  # the user that is asked for brief
 
-    @discord.ui.button(label="Write A Task", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=":heavy_plus_sign: Write A Task", style=discord.ButtonStyle.primary)
     async def write(self, interaction: discord.Integration, button: discord.ui.Button):
         if self.addressee == interaction.user:
             d = {}
@@ -32,22 +32,22 @@ class AskBriefView(discord.ui.View):
                 "You are not the addressee!", ephemeral=True
             )
 
-    @discord.ui.button(label="Your Tasks", style=discord.ButtonStyle.primary)
-    async def tasks(self, interaction: discord.Integration, button: discord.ui.Button):
-        if self.addressee == interaction.user:
-            pass
-        else:
-            await interaction.response.send_message(
-                "You are not the addressee!", ephemeral=True
-            )
+    # @discord.ui.button(label="Your Tasks", style=discord.ButtonStyle.primary)
+    # async def tasks(self, interaction: discord.Integration, button: discord.ui.Button):
+    #     if self.addressee == interaction.user:
+    #         pass
+    #     else:
+    #         await interaction.response.send_message(
+    #             "You are not the addressee!", ephemeral=True
+    #         )
 
-    @discord.ui.button(label="Browse Requests", style=discord.ButtonStyle.primary)
-    async def job_requests(
-        self, interaction: discord.Integration, button: discord.ui.Button
-    ):
-        if self.addressee == interaction.user:
-            pass
-        else:
-            await interaction.response.send_message(
-                "You are not the addressee!", ephemeral=True
-            )
+    # @discord.ui.button(label="Browse Requests", style=discord.ButtonStyle.primary)
+    # async def job_requests(
+    #     self, interaction: discord.Integration, button: discord.ui.Button
+    # ):
+    #     if self.addressee == interaction.user:
+    #         pass
+    #     else:
+    #         await interaction.response.send_message(
+    #             "You are not the addressee!", ephemeral=True
+    #         )
