@@ -13,6 +13,7 @@ class StartView(discord.ui.View):
         self.headers = None
         self.job_id = 0
         self.job_title = ""
+        self.ask_msg_id = 0
 
     @discord.ui.button(label="▶️ Start", style=discord.ButtonStyle.green)
     async def startjob(
@@ -54,10 +55,11 @@ class StartView(discord.ui.View):
             webhooks = await channel.webhooks()
             for w in webhooks:
                 await w.delete()
-            
-            # await replied_to.delete()
-            # await message.delete()
-            
+
+            # deleting the ask msg
+            the_ask_msg = await channel.fetch_message(self.ask_msg_id)
+            await the_ask_msg.delete()
+
             try:
                 (task,) = [
                     task

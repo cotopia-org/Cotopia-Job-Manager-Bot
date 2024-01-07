@@ -13,6 +13,7 @@ from views.submitted_job import SubmittedJobView
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     users_info = None
     self_accept = False
+    ask_msg_id = 0
 
     job_title = discord.ui.TextInput(
         style=discord.TextStyle.short,
@@ -126,6 +127,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             startview.headers = headers
             startview.job_id = data["id"]
             startview.job_title = data["title"]
+            startview.ask_msg_id = self.ask_msg_id
             await interaction.followup.send(
                 content=self.create_job_post_text(
                     guild=interaction.guild, data=post_data

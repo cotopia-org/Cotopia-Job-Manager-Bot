@@ -108,15 +108,18 @@ def run():
             ask_view = AskBriefView()
             ask_view.addressee = member
             try:
-                await guild.system_channel.send(
+                ask_msg = await guild.system_channel.send(
                     "Welcome " + member.mention + "!\nWhat are you going to do today?",
                     view=ask_view,
                 )
             except:  # noqa: E722
-                await guild.text_channels[0].send(
+                ask_msg = await guild.text_channels[0].send(
                     "Welcome " + member.mention + "!\nWhat are you going to do today?",
                     view=ask_view,
                 )
+            
+            ask_view.ask_msg_id = ask_msg.id
+            print(f"the ask msg id is {ask_view.ask_msg_id}")
 
         # When user leaves voice channel
         if after.channel is None:
