@@ -8,7 +8,7 @@ LINE = "-----------------------------------------------------\n"
 
 
 class SubmittedJobView(discord.ui.View):
-    @discord.ui.button(label="Accept", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="🤝 Accept", style=discord.ButtonStyle.secondary)
     async def accept(self, interaction: discord.Integration, button: discord.ui.Button):
         users_info = {}
         users_info["discord_guild"] = interaction.guild_id
