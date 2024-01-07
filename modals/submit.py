@@ -6,6 +6,7 @@ import requests
 
 from bot_auth import create_token
 from utils.job_id_coder import gen_code
+from views.startstop import StartView
 from views.submitted_job import SubmittedJobView
 
 
@@ -52,6 +53,8 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
         post_data = {}
         payload_dic = {}
         payload_dic["title"] = self.job_title.value
@@ -71,9 +74,9 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         data = r.json()
 
         if r.status_code == 201:
-            await interaction.response.send_message(
-                "Job Successfully Submitted!", ephemeral=True
-            )
+            # await interaction.response.send_message(
+            #     "Job Successfully Submitted!", ephemeral=True
+            # )
             print(f"status code: {r.status_code}\n{data}")
             post_data = data
 
@@ -89,25 +92,25 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                     )
                     post_data["acceptors"] = [interaction.user]
 
-                    url = f"https://jobs.cotopia.social/bot/accepted_jobs/{job_id}"
-                    pl = {"acceptor_status": "doing"}
-                    update_status_req = requests.put(url=url, json=pl, headers=headers)
-                    update_status_data = update_status_req.json()
-                    if update_status_req.status_code == 200:
-                        print(
-                            f"status code: {update_status_req.status_code}\n{update_status_data}"
-                        )
-                    else:
-                        print(
-                            f"status code: {update_status_req.status_code}\n{update_status_data}"
-                        )
+                    # url = f"https://jobs.cotopia.social/bot/accepted_jobs/{job_id}"
+                    # pl = {"acceptor_status": "doing"}
+                    # update_status_req = requests.put(url=url, json=pl, headers=headers)
+                    # update_status_data = update_status_req.json()
+                    # if update_status_req.status_code == 200:
+                    #     print(
+                    #         f"status code: {update_status_req.status_code}\n{update_status_data}"
+                    #     )
+                    # else:
+                    #     print(
+                    #         f"status code: {update_status_req.status_code}\n{update_status_data}"
+                    #     )
                 else:
                     print(
                         f"status code: {self_accept_req.status_code}\n{self_accept_data}"
                     )
 
         else:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"ERROR {r.status_code}\n{data}", ephemeral=True
             )
             print(f"ERROR {r.status_code}\n{data}")
@@ -118,6 +121,17 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 channel=interaction.guild.get_channel(1186373857062436954),
                 user=interaction.user,
                 data=post_data,
+            )
+            startview = StartView()
+            startview.headers = headers
+            startview.job_id = data["id"]
+            startview.job_title = data["title"]
+            await interaction.followup.send(
+                content=self.create_job_post_text(
+                    guild=interaction.guild, data=post_data
+                ),
+                view=startview,
+                ephemeral=True,
             )
 
     async def post_the_job_to_channel(self, guild, channel, user, data):
