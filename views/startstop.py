@@ -14,7 +14,7 @@ class StartView(discord.ui.View):
         self.job_id = 0
         self.job_title = ""
 
-    @discord.ui.button(label=":arrow_forward: Start", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="▶️ Start", style=discord.ButtonStyle.green)
     async def startjob(
         self, interaction: discord.Integration, button: discord.ui.Button
     ):
