@@ -4,7 +4,7 @@ from modals.submit import JobSubmitModal
 
 
 class AskBriefView(discord.ui.View):
-    def __init__(self, *, timeout: float | None = 180):
+    def __init__(self, *, timeout: float | None = 3600):
         super().__init__(timeout=timeout)
         self.addressee = None  # the user that is asked for brief
         self.ask_msg_id = 0
