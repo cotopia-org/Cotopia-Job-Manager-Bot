@@ -149,7 +149,7 @@ class ThreeButtonView(discord.ui.View):
             if r.status_code == 200:
                 print(f"status code: {r.status_code}\n{data}")
                 await interaction.response.send_message(
-                    "Task Status: Doing!", ephemeral=True
+                    "Task Status: Todo!!", ephemeral=True
                 )
                 # deleting the ask msg
                 the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
