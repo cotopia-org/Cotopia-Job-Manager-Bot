@@ -11,7 +11,7 @@ from bot_auth import create_token
 from briefing import briefing
 from modals.submit import JobSubmitModal
 from views.ask_brief import AskBriefView
-from views.startstop import ThreeButtonView
+from views.threebutton import ThreeButtonView
 
 logger = settings.logging.getLogger("bot")
 
