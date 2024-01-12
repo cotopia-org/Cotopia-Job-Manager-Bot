@@ -11,6 +11,7 @@ from bot_auth import create_token
 from briefing import briefing
 from modals.submit import JobSubmitModal
 from views.ask_brief import AskBriefView
+from views.startstop import ThreeButtonView
 
 logger = settings.logging.getLogger("bot")
 
@@ -105,21 +106,68 @@ def run():
 
         async def ask_for_brief():
             await asyncio.sleep(8)  # 8 seconds
-            ask_view = AskBriefView()
-            ask_view.addressee = member
-            try:
-                ask_msg = await guild.system_channel.send(
-                    "Welcome " + member.mention + "!\nWhat are you going to do today?",
-                    view=ask_view,
-                )
-            except:  # noqa: E722
-                ask_msg = await guild.text_channels[0].send(
-                    "Welcome " + member.mention + "!\nWhat are you going to do today?",
-                    view=ask_view,
-                )
-            
-            ask_view.ask_msg_id = ask_msg.id
-            print(f"the ask msg id is {ask_view.ask_msg_id}")
+
+            # requesting doing tasks
+            users_info = {}
+            users_info["discord_guild"] = guild.id
+            users_info["discord_id"] = member.id
+            users_info["discord_name"] = member.name
+            users_info["guild_name"] = guild.name
+            roles = member.roles
+            roles_list = []
+            for r in roles:
+                roles_list.append(r.name)
+            users_info["discord_roles"] = roles_list
+
+            headers = {"Authorization": create_token(users_info)}
+            url = "https://jobs.cotopia.social/bot/aj/me/by/doing"
+            r = requests.get(url=url, headers=headers)
+            data = r.json()
+            status_code = r.status_code
+            print(f"status code: {status_code}\n{data}")
+            if status_code == 200 and len(data) > 0:
+                task_index = len(data) - 1     # last one
+                task_title = data[task_index]["job"]["title"]
+                follow_up_view = ThreeButtonView()
+                follow_up_view.addressee = member
+                follow_up_view.job_id = data[task_index]["job"]["id"]
+                follow_up_view.job_title = task_title
+                try:
+                    ask_msg = await guild.system_channel.send(
+                        "Welcome "
+                        + member.mention
+                        + f"!\nDo you want to continue working on **'{task_title}'**?",
+                        view=follow_up_view,
+                    )
+                except:  # noqa: E722
+                    ask_msg = await guild.text_channels[0].send(
+                        "Welcome "
+                        + member.mention
+                        + f"!\nDo you want to continue working on **'{task_title}'**?",
+                        view=follow_up_view,
+                    )
+                follow_up_view.ask_msg_id = ask_msg.id
+
+            else:
+                ask_view = AskBriefView()
+                ask_view.addressee = member
+                try:
+                    ask_msg = await guild.system_channel.send(
+                        "Welcome "
+                        + member.mention
+                        + "!\nWhat are you going to do today?",
+                        view=ask_view,
+                    )
+                except:  # noqa: E722
+                    ask_msg = await guild.text_channels[0].send(
+                        "Welcome "
+                        + member.mention
+                        + "!\nWhat are you going to do today?",
+                        view=ask_view,
+                    )
+
+                ask_view.ask_msg_id = ask_msg.id
+                print(f"the ask msg id is {ask_view.ask_msg_id}")
 
         # When user leaves voice channel
         if after.channel is None:
@@ -199,9 +247,9 @@ def run():
         status_code = r.status_code
         await ctx.send(f"status code: {status_code}\n{data}")
 
-    @bot.tree.context_menu(name="Pause Task!")
-    async def pause_task(interaction: discord.Interaction, message: discord.Message):
-        await interaction.response.send_message("this is not a task!")
+    # @bot.tree.context_menu(name="Pause Task!")
+    # async def pause_task(interaction: discord.Interaction, message: discord.Message):
+    #     await interaction.response.send_message("this is not a task!")
 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
