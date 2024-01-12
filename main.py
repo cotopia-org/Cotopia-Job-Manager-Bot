@@ -139,6 +139,7 @@ def run():
                         + f"!\nDo you want to continue working on **'{task_title}'**?",
                         view=follow_up_view,
                     )
+                    follow_up_view.channel = guild.system_channel
                 except:  # noqa: E722
                     ask_msg = await guild.text_channels[0].send(
                         "Welcome "
@@ -146,6 +147,8 @@ def run():
                         + f"!\nDo you want to continue working on **'{task_title}'**?",
                         view=follow_up_view,
                     )
+                    follow_up_view.channel = guild.text_channels[0]
+                
                 follow_up_view.ask_msg_id = ask_msg.id
 
             else:

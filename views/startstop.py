@@ -4,7 +4,9 @@ import discord
 import requests
 from persiantools.jdatetime import JalaliDate
 
+from bot_auth import create_token
 from briefing import briefing
+from views.ask_brief import AskBriefView
 
 
 class StartView(discord.ui.View):
@@ -84,8 +86,8 @@ class ThreeButtonView(discord.ui.View):
         self.job_id = 0
         self.job_title = ""
         self.ask_msg_id = 0
+        self.channel = None
 
-    
     @discord.ui.button(label="Yes!", style=discord.ButtonStyle.primary)
     async def yes(self, interaction: discord.Integration, button: discord.ui.Button):
         if self.addressee == interaction.user:
@@ -137,20 +139,109 @@ class ThreeButtonView(discord.ui.View):
                 "You are not the addressee!", ephemeral=True
             )
 
-    
-
     @discord.ui.button(label="No, it's done!", style=discord.ButtonStyle.secondary)
-    async def no_done(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def no_done(
+        self, interaction: discord.Integration, button: discord.ui.Button
+    ):
         if self.addressee == interaction.user:
-            pass
+            # make token and headers
+            d = {}
+            d["discord_guild"] = interaction.guild_id
+            d["discord_id"] = interaction.user.id
+            d["discord_name"] = interaction.user.name
+            d["guild_name"] = interaction.guild.name
+            roles = interaction.user.roles
+            roles_list = []
+            for r in roles:
+                roles_list.append(r.name)
+            d["discord_roles"] = roles_list
+            headers = {"Authorization": create_token(d)}
+            # change the status to done
+            url = f"https://jobs.cotopia.social/bot/accepted_jobs/{self.job_id}"
+            pl = {"acceptor_status": "done"}
+            r = requests.put(url=url, json=pl, headers=headers)
+            data = r.json()
+            if r.status_code == 200:
+                print(f"status code: {r.status_code}\n{data}")
+                await interaction.response.send_message(
+                    "Task Status: Done!", ephemeral=True
+                )
+                # deleting the ask msg
+                the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
+                await the_ask_msg.delete()
+
+                # ask again what she's gonna do
+                ask_view = AskBriefView()
+                ask_view.addressee = interaction.user
+                ask_msg = await self.channel.send(
+                    "Welcome "
+                    + interaction.user.mention
+                    + "!\nWhat are you going to do today?",
+                    view=ask_view,
+                )
+                ask_view.ask_msg_id = ask_msg.id
+                print(f"the ask msg id is {ask_view.ask_msg_id}")
+
+            else:
+                print(f"status code: {r.status_code}\n{data}")
+                await interaction.response.send_message(
+                    f"status code: {r.status_code}\n{data}", ephemeral=True
+                )
+
         else:
             await interaction.response.send_message(
                 "You are not the addressee!", ephemeral=True
             )
+
     @discord.ui.button(label="No, it's paused!", style=discord.ButtonStyle.secondary)
-    async def no_later(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def no_later(
+        self, interaction: discord.Integration, button: discord.ui.Button
+    ):
         if self.addressee == interaction.user:
-            pass
+            # make token and headers
+            d = {}
+            d["discord_guild"] = interaction.guild_id
+            d["discord_id"] = interaction.user.id
+            d["discord_name"] = interaction.user.name
+            d["guild_name"] = interaction.guild.name
+            roles = interaction.user.roles
+            roles_list = []
+            for r in roles:
+                roles_list.append(r.name)
+            d["discord_roles"] = roles_list
+            headers = {"Authorization": create_token(d)}
+            # change the status to todo
+            url = f"https://jobs.cotopia.social/bot/accepted_jobs/{self.job_id}"
+            pl = {"acceptor_status": "todo"}
+            r = requests.put(url=url, json=pl, headers=headers)
+            data = r.json()
+            if r.status_code == 200:
+                print(f"status code: {r.status_code}\n{data}")
+                await interaction.response.send_message(
+                    "Task Status: Doing!", ephemeral=True
+                )
+                # deleting the ask msg
+                the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
+                await the_ask_msg.delete()
+
+                # ask again what she's gonna do
+                ask_view = AskBriefView()
+                ask_view.addressee = interaction.user
+                ask_msg = await self.channel.send(
+                    "Welcome "
+                    + interaction.user.mention
+                    + "!\nWhat are you going to do today?",
+                    view=ask_view,
+                )
+                ask_view.ask_msg_id = ask_msg.id
+                print(f"the ask msg id is {ask_view.ask_msg_id}")
+
+            else:
+                print(f"status code: {r.status_code}\n{data}")
+                await interaction.response.send_message(
+                    f"status code: {r.status_code}\n{data}", ephemeral=True
+                )
+
         else:
             await interaction.response.send_message(
                 "You are not the addressee!", ephemeral=True
