@@ -56,6 +56,14 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     async def on_submit(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True, thinking=True)
 
+        # creating the channel
+        category = discord.utils.get(interaction.guild.categories, name="JOBS")
+        if category is None:
+            category = await interaction.guild.create_category('JOBS')
+        da_channel = discord.utils.get(interaction.guild.text_channels, name='jobs-general')
+        if da_channel is None:
+            da_channel = await interaction.guild.create_text_channel(category=category, name='jobs-general')
+
         post_data = {}
         payload_dic = {}
         payload_dic["title"] = self.job_title.value
@@ -119,7 +127,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         if post_data != {}:
             await self.post_the_job_to_channel(
                 guild=interaction.guild,
-                channel=interaction.guild.get_channel(1186373857062436954),
+                channel=da_channel,
                 user=interaction.user,
                 data=post_data,
             )
@@ -182,7 +190,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 tags = tags + "**[" + t + "]** "
         body = body + tags
 
-        if data["acceptors"]:
+        if "acceptors" in data:
             acceptors = "**Accepted By:**\n" + data["acceptors"][0].mention
         else:
             acceptors = "**Accepted By:** " + "-" + "\n"
