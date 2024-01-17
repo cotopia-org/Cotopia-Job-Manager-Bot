@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 import discord
@@ -6,6 +7,7 @@ from discord.components import SelectOption
 
 from bot_auth import create_token
 from modals.submit import JobSubmitModal
+from utils.job_id_coder import gen_code
 
 
 class AskBriefView(discord.ui.View):
@@ -132,7 +134,46 @@ class TodoDropDown(discord.ui.Select):
         )
 
     async def callback(self, interaction: discord.Integration):
-        await interaction.response.send_message(f"you have choosen {self.values[0]}", ephemeral=True)
+        job_id = self.values[0]
+        await interaction.response.send_message(
+            f"you have choosen {job_id}", ephemeral=True
+        )
+
+    def create_job_post_text(self, guild, data):
+        LINE = "\n-----------------------------------------------------\n"
+
+        title = "## " + data["title"]
+
+        if data["description"]:
+            body = "**Description:**\n" + data["description"] + "\n"
+        else:
+            body = "**Description:** " + "-" + "\n"
+        ws = data["workspace"].replace(guild.name + "/", "")
+        if len(ws) > 0:
+            body = body + "**Workspace:** " + ws + "\n"
+        else:
+            body = body + "**Workspace:** " + "-" + "\n"
+        if data["deadline"]:
+            deadline = datetime.strptime(data["deadline"], "%Y-%m-%dT%H:%M:%S")
+            body = body + "**Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+        else:
+            body = body + "**Deadline:** " + "-" + "\n"
+        tags = ""
+        if data["tags"]:
+            for t in data["tags"]:
+                tags = tags + "**[" + t + "]** "
+        body = body + tags
+
+        # if "acceptors" in data:
+        #     acceptors = "**Accepted By:**\n" + data["acceptors"][0].mention
+        # else:
+        #     acceptors = "**Accepted By:** " + "-" + "\n"
+
+        id_line = "id: " + gen_code(data["id"])
+
+        content = title + LINE + body + LINE + id_line
+
+        return content
 
 
 class TodoView(discord.ui.View):
