@@ -8,6 +8,7 @@ from discord.components import SelectOption
 from bot_auth import create_token
 from modals.submit import JobSubmitModal
 from utils.job_id_coder import gen_code
+from views.startbutton import StartView
 
 
 class AskBriefView(discord.ui.View):
@@ -80,7 +81,11 @@ class AskBriefView(discord.ui.View):
                             )
                         )
 
-                    todo_view = TodoView(options=rows, placeholder="Select a TO-DO!")
+                    todo_view = TodoView(
+                        options=rows,
+                        placeholder="Select a TO-DO!",
+                        ask_msg_id=self.ask_msg_id,
+                    )
                     await interaction.followup.send(
                         "Select the task that you want to work on:", view=todo_view
                     )
@@ -132,12 +137,45 @@ class TodoDropDown(discord.ui.Select):
             disabled=disabled,
             row=row,
         )
+        self.ask_msg_id = 0
 
     async def callback(self, interaction: discord.Integration):
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
         job_id = self.values[0]
-        await interaction.response.send_message(
-            f"you have choosen {job_id}", ephemeral=True
-        )
+        # creating token
+        d = {}
+        d["discord_guild"] = interaction.guild_id
+        d["discord_id"] = interaction.user.id
+        d["discord_name"] = interaction.user.name
+        d["guild_name"] = interaction.guild.name
+        roles = interaction.user.roles
+        roles_list = []
+        for r in roles:
+            roles_list.append(r.name)
+        d["discord_roles"] = roles_list
+
+        headers = {"Authorization": create_token(d)}
+        # sending the request
+        url = f"https://jobs.cotopia.social/bot/job/{job_id}"
+        r = requests.get(url=url, headers=headers)
+        data = r.json()
+        status_code = r.status_code
+        if status_code == 200:
+            content = self.create_job_post_text(guild=interaction.guild, data=data)
+            startview = StartView()
+            startview.headers = headers
+            startview.job_id = data["id"]
+            startview.job_title = data["title"]
+            startview.ask_msg_id = self.ask_msg_id
+            await interaction.followup.send(
+                content=content, view=startview, ephemeral=True
+            )
+
+        else:
+            await interaction.followup.send(
+                f"ERROR {status_code}\n{data}", ephemeral=True
+            )
 
     def create_job_post_text(self, guild, data):
         LINE = "\n-----------------------------------------------------\n"
@@ -182,7 +220,10 @@ class TodoView(discord.ui.View):
         *,
         options: List[SelectOption],
         placeholder: str,
+        ask_msg_id: int,
         timeout: float | None = 3600,
     ):
         super().__init__(timeout=timeout)
-        self.add_item(TodoDropDown(options=options, placeholder=placeholder))
+        todo_dropdown = TodoDropDown(options=options, placeholder=placeholder)
+        todo_dropdown.ask_msg_id = ask_msg_id
+        self.add_item(todo_dropdown)
