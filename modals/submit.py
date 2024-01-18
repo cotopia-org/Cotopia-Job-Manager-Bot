@@ -82,7 +82,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
         headers = {"Authorization": create_token(self.users_info)}
         payload = json.dumps(payload_dic)
-        url = "https://jobs.cotopia.social/bot/job"
+        url = "https://jobs-api.cotopia.social/bot/job"
         r = requests.post(url=url, data=payload, headers=headers)
         data = r.json()
 
@@ -96,7 +96,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             # self accept
             if self.self_accept:
                 job_id = data["id"]
-                url = f"https://jobs.cotopia.social/bot/accept/{job_id}"
+                url = f"https://jobs-api.cotopia.social/bot/accept/{job_id}"
                 self_accept_req = requests.post(url=url, headers=headers)
                 self_accept_data = self_accept_req.json()
                 if self_accept_req.status_code == 201:
@@ -105,7 +105,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                     )
                     post_data["acceptors"] = [interaction.user]
 
-                    # url = f"https://jobs.cotopia.social/bot/accepted_jobs/{job_id}"
+                    # url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{job_id}"
                     # pl = {"acceptor_status": "doing"}
                     # update_status_req = requests.put(url=url, json=pl, headers=headers)
                     # update_status_data = update_status_req.json()

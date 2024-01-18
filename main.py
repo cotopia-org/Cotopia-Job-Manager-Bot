@@ -120,7 +120,7 @@ def run():
             users_info["discord_roles"] = roles_list
 
             headers = {"Authorization": create_token(users_info)}
-            url = "https://jobs.cotopia.social/bot/aj/me/by/doing"
+            url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
             r = requests.get(url=url, headers=headers)
             data = r.json()
             status_code = r.status_code
@@ -263,7 +263,7 @@ def run():
         users_info["discord_roles"] = roles_list
 
         headers = {"Authorization": create_token(users_info)}
-        url = "https://jobs.cotopia.social/bot/accepted_jobs/me"
+        url = "https://jobs-api.cotopia.social/bot/accepted_jobs/me"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code

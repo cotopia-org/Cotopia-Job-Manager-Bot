@@ -19,7 +19,7 @@ class StartView(discord.ui.View):
     async def startjob(
         self, interaction: discord.Integration, button: discord.ui.Button
     ):
-        url = f"https://jobs.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()

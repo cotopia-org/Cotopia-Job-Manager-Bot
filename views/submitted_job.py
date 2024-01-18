@@ -27,7 +27,7 @@ class SubmittedJobView(discord.ui.View):
         s = text.split("id: " + PREFIX, 1)
         job_id = decode(PREFIX + s[1])
 
-        url = f"https://jobs.cotopia.social/bot/accept/{job_id}"
+        url = f"https://jobs-api.cotopia.social/bot/accept/{job_id}"
 
         r = requests.post(url=url, headers=headers)
         data = r.json()

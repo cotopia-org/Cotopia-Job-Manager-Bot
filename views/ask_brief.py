@@ -63,7 +63,7 @@ class AskBriefView(discord.ui.View):
 
             headers = {"Authorization": create_token(d)}
             # sending the request
-            url = "https://jobs.cotopia.social/bot/aj/me/by/todo"
+            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=headers)
             data = r.json()
             status_code = r.status_code
@@ -157,7 +157,7 @@ class TodoDropDown(discord.ui.Select):
 
         headers = {"Authorization": create_token(d)}
         # sending the request
-        url = f"https://jobs.cotopia.social/bot/job/{job_id}"
+        url = f"https://jobs-api.cotopia.social/bot/job/{job_id}"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code
