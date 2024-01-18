@@ -59,10 +59,14 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         # creating the channel
         category = discord.utils.get(interaction.guild.categories, name="JOBS")
         if category is None:
-            category = await interaction.guild.create_category('JOBS')
-        da_channel = discord.utils.get(interaction.guild.text_channels, name='jobs-general')
+            category = await interaction.guild.create_category("JOBS")
+        da_channel = discord.utils.get(
+            interaction.guild.text_channels, name="jobs-general"
+        )
         if da_channel is None:
-            da_channel = await interaction.guild.create_text_channel(category=category, name='jobs-general')
+            da_channel = await interaction.guild.create_text_channel(
+                category=category, name="jobs-general"
+            )
 
         post_data = {}
         payload_dic = {}
@@ -131,18 +135,26 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 user=interaction.user,
                 data=post_data,
             )
-            startview = StartView()
-            startview.headers = headers
-            startview.job_id = data["id"]
-            startview.job_title = data["title"]
-            startview.ask_msg_id = self.ask_msg_id
-            await interaction.followup.send(
-                content=self.create_job_post_text(
-                    guild=interaction.guild, data=post_data
-                ),
-                view=startview,
-                ephemeral=True,
-            )
+            if self.self_accept:
+                startview = StartView()
+                startview.headers = headers
+                startview.job_id = data["id"]
+                startview.job_title = data["title"]
+                startview.ask_msg_id = self.ask_msg_id
+                await interaction.followup.send(
+                    content=self.create_job_post_text(
+                        guild=interaction.guild, data=post_data
+                    ),
+                    view=startview,
+                    ephemeral=True,
+                )
+            else:
+                await interaction.followup.send(
+                    content=self.create_job_post_text(
+                        guild=interaction.guild, data=post_data
+                    ),
+                    ephemeral=True,
+                )
 
     async def post_the_job_to_channel(self, guild, channel, user, data):
         content = self.create_job_post_text(guild=guild, data=data)

@@ -212,8 +212,8 @@ def run():
                     )
                     await task2
 
-    @bot.tree.command()
-    async def submit(interaction: discord.Interaction):
+    @bot.tree.command(description="Create a new Job Request, so others can accept it and do it for you!")
+    async def post_job_request(interaction: discord.Interaction):
         d = {}
         d["discord_guild"] = interaction.guild_id
         d["discord_id"] = interaction.user.id
@@ -227,6 +227,25 @@ def run():
 
         job_submit_modal = JobSubmitModal()
         job_submit_modal.users_info = d
+
+        await interaction.response.send_modal(job_submit_modal)
+    
+    @bot.tree.command(description="Create a new Job and accept it yourself!")
+    async def new_task(interaction: discord.Interaction):
+        d = {}
+        d["discord_guild"] = interaction.guild_id
+        d["discord_id"] = interaction.user.id
+        d["discord_name"] = interaction.user.name
+        d["guild_name"] = interaction.guild.name
+        roles = interaction.user.roles
+        roles_list = []
+        for r in roles:
+            roles_list.append(r.name)
+        d["discord_roles"] = roles_list
+
+        job_submit_modal = JobSubmitModal()
+        job_submit_modal.users_info = d
+        job_submit_modal.self_accept = True
 
         await interaction.response.send_modal(job_submit_modal)
 
