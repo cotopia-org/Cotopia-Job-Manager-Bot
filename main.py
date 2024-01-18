@@ -268,6 +268,22 @@ def run():
         data = r.json()
         status_code = r.status_code
         await ctx.send(f"status code: {status_code}\n{data}")
+    
+    # @bot.hybrid_command()
+    # async def token(ctx):
+    #     users_info = {}
+    #     users_info["discord_guild"] = ctx.guild.id
+    #     users_info["discord_id"] = ctx.author.id
+    #     users_info["discord_name"] = ctx.author.name
+    #     users_info["guild_name"] = ctx.guild.name
+    #     roles = ctx.author.roles
+    #     roles_list = []
+    #     for r in roles:
+    #         roles_list.append(r.name)
+    #     users_info["discord_roles"] = roles_list
+
+    #     await ctx.send(create_token(users_info), ephemeral=True)
+
 
     # @bot.tree.context_menu(name="Pause Task!")
     # async def pause_task(interaction: discord.Interaction, message: discord.Message):
