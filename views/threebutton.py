@@ -67,6 +67,7 @@ class ThreeButtonView(discord.ui.View):
                 print("Asking for brief was not canceled! Don't panic tho.")
 
             # updating job status
+            status.remove_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
             await status.update_status_text(interaction.guild)
 
         else:

@@ -22,9 +22,8 @@ class DoingButtons(discord.ui.View):
                 "Task moved to DONE!", ephemeral=True
             )
             # updating job status
-            idles = []
-            idles.append(interaction.user)
-            await status.update_status_text(guild=interaction.guild, idles=idles)
+            status.set_as_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            await status.update_status_text(guild=interaction.guild)
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(
@@ -43,9 +42,8 @@ class DoingButtons(discord.ui.View):
                 "Task moved to TODO!", ephemeral=True
             )
             # updating job status
-            idles = []
-            idles.append(interaction.user)
-            await status.update_status_text(guild=interaction.guild, idles=idles)
+            status.set_as_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            await status.update_status_text(guild=interaction.guild)
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(

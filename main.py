@@ -101,6 +101,7 @@ def run():
                             print("Asking for brief was not canceled! Don't panic tho.")
 
                         # updating job status
+                        status.remove_idle(guild_id=message.guild.id, member_id=message.author.id)
                         await status.update_status_text(message.guild)
 
         except:  # noqa: E722
