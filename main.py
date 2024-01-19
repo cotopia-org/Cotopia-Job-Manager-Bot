@@ -319,8 +319,8 @@ def run():
         data = r.json()
         status_code = r.status_code
         if status_code == 200:
-            if len(data) < 0:
-                await ctx.send("Your DOINGS list is empty.", ephemeral=True)
+            if len(data) <= 0:
+                await ctx.send("You have no tasks in DOING!", ephemeral=True)
             else:
                 task_index = len(data) - 1  # last one
                 job_id = data[task_index]["job"]["id"]
