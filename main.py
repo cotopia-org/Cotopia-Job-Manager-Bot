@@ -268,6 +268,49 @@ def run():
         data = r.json()
         status_code = r.status_code
         await ctx.send(f"status code: {status_code}\n{data}")
+
+    
+    @bot.hybrid_command()
+    async def gen_status_text(ctx):
+        guild = ctx.guild
+        members = guild.members
+        in_voice = []
+        not_in_voice = []
+        text = ""
+
+        for i in members:
+            if i.bot is False:
+                if i.voice is None:
+                    not_in_voice.append(i)
+                else:
+                    in_voice.append(i)
+
+        for i in in_voice:
+            # check if it should record a brief
+            # if true, then the person is idle
+            # if false, then read the brief
+            if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
+                # now read the brief
+                b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
+                text = text + i.mention + f":    :green_circle: {b}\n"
+            else:
+                text = text + i.mention + ":    :yellow_circle:\n"
+
+        for i in not_in_voice:
+            text = text + i.mention + ":    :black_circle:\n"
+        
+        category = discord.utils.get(guild.categories, name="JOBS")
+        if category is None:
+            category = await guild.create_category("JOBS")
+        da_channel = discord.utils.get(
+            guild.text_channels, name="status"
+        )
+        if da_channel is None:
+            da_channel = await guild.create_text_channel(
+                category=category, name="status"
+            )
+
+        await da_channel.send(text)
     
     # @bot.hybrid_command()
     # async def token(ctx):
