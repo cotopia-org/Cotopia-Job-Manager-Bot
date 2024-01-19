@@ -1,6 +1,8 @@
 import discord
 import requests
 
+from status import utils as status
+
 
 class DoingButtons(discord.ui.View):
     def __init__(self, *, timeout: float | None = 180):
@@ -19,6 +21,10 @@ class DoingButtons(discord.ui.View):
             await interaction.response.send_message(
                 "Task moved to DONE!", ephemeral=True
             )
+            # updating job status
+            idles = []
+            idles.append(interaction.user)
+            await status.update_status_text(guild=interaction.guild, idles=idles)
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(
@@ -36,6 +42,10 @@ class DoingButtons(discord.ui.View):
             await interaction.response.send_message(
                 "Task moved to TODO!", ephemeral=True
             )
+            # updating job status
+            idles = []
+            idles.append(interaction.user)
+            await status.update_status_text(guild=interaction.guild, idles=idles)
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(
