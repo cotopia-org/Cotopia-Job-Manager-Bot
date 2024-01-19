@@ -283,8 +283,8 @@ def run():
     @bot.hybrid_command()
     async def gen_status_text(ctx):
         try:
+            await ctx.send("Trying to generate and send the text!", ephemeral=True)
             await status.gen_status_text(ctx.guild)
-            await ctx.send("Text generated and sent!", ephemeral=True)
         except:  # noqa: E722
             await ctx.send("Someting went wrong!", ephemeral=True)
 
