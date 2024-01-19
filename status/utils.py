@@ -58,6 +58,12 @@ async def gen_status_text(guild):
 
         cursor.execute(table_query)
 
+        cursor.execute(
+            """CREATE TABLE IF NOT EXISTS idles(
+                                guild_id INT NOT NULL,
+                                member_id INT NOT NULL); """
+        )
+
         # Deleting the row just in case
         cursor.execute(f"DELETE FROM status_txt WHERE guild_id = {guild.id};")
         sqliteConnection.commit()
