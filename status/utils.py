@@ -29,8 +29,8 @@ async def gen_status_text(guild):
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n"
 
-    for i in not_in_voice:
-        text = text + ":white_circle:   " + i.mention + "\n"
+    # for i in not_in_voice:
+    #     text = text + ":white_circle:   " + i.mention + "\n"
 
     category = discord.utils.get(guild.categories, name="JOBS")
     if category is None:
@@ -94,7 +94,8 @@ def get_status_text(guild_id: int):
     return result
 
 
-async def update_status_text(guild, idles = None | None):
+async def update_status_text(guild, idles = None):
+    print("yooo we are here!")
     text_row = get_status_text(guild_id=guild.id)
     if text_row is None:
         gen_status_text(guild)
@@ -118,8 +119,9 @@ async def update_status_text(guild, idles = None | None):
         # if false, then read the brief
 
         # skip if she is in idles
-        if i in idles:
-            continue
+        if idles is not None:
+            if i in idles:
+                continue
 
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
@@ -129,12 +131,13 @@ async def update_status_text(guild, idles = None | None):
             text = text + ":yellow_circle:  " + i.mention + "\n"
     
     # Now adding idle ones
-    for i in idles:
-        text = text + ":yellow_circle:  " + i.mention + "\n"
+    if idles is not None:
+        for i in idles:
+            text = text + ":yellow_circle:  " + i.mention + "\n"
 
 
-    for i in not_in_voice:
-        text = text + ":white_circle:   " + i.mention + "\n"
+    # for i in not_in_voice:
+    #     text = text + ":white_circle:   " + i.mention + "\n"
 
     # fetching the message
     try:
