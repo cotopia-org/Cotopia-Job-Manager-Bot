@@ -1,0 +1,77 @@
+import sqlite3
+
+import discord
+
+from briefing import briefing
+
+
+async def gen_status_text(guild):
+    members = guild.members
+    in_voice = []
+    not_in_voice = []
+    text = ""
+
+    for i in members:
+        if i.bot is False:
+            if i.voice is None:
+                not_in_voice.append(i)
+            else:
+                in_voice.append(i)
+
+    for i in in_voice:
+        # check if it should record a brief
+        # if true, then the person is idle
+        # if false, then read the brief
+        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
+            # now read the brief
+            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
+            text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
+        else:
+            text = text + ":yellow_circle:  " + i.mention + "\n"
+
+    for i in not_in_voice:
+        text = text + ":white_circle:   " + i.mention + "\n"
+
+    category = discord.utils.get(guild.categories, name="JOBS")
+    if category is None:
+        category = await guild.create_category("JOBS")
+    da_channel = discord.utils.get(guild.text_channels, name="status")
+    if da_channel is None:
+        da_channel = await guild.create_text_channel(category=category, name="status")
+
+    da_msg = await da_channel.send(text)
+
+    try:
+        # Connect to DB and create a cursor
+        sqliteConnection = sqlite3.connect("jobs.db")
+        cursor = sqliteConnection.cursor()
+        print("DB Init")
+
+        # Creating table
+        table_query = """   CREATE TABLE IF NOT EXISTS status_txt(
+                                guild_id INT NOT NULL,
+                                channel_id INT NOT NULL,
+                                msg_id INT NOT NULL); """
+
+        cursor.execute(table_query)
+
+        # Inserting data
+        msg_query = f"""     INSERT INTO status_txt VALUES
+                                ({guild.id}, {da_channel.id}, {da_msg.id});"""
+
+        cursor.execute(msg_query)
+
+        # Close the cursor
+        cursor.close()
+
+    # Handle errors
+    except sqlite3.Error as error:
+        print("Error occurred - ", error)
+
+    # Close DB Connection irrespective of success
+    # or failure
+    finally:
+        if sqliteConnection:
+            sqliteConnection.commit()
+            sqliteConnection.close()
+            print("SQLite Connection closed")

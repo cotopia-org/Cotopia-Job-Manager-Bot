@@ -10,6 +10,7 @@ import settings
 from bot_auth import create_token
 from briefing import briefing
 from modals.submit import JobSubmitModal
+from status import utils as status
 from views.ask_brief import AskBriefView
 from views.threebutton import ThreeButtonView
 
@@ -37,6 +38,14 @@ def run():
     async def on_ready():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})")
         await bot.tree.sync()
+
+    @bot.event
+    async def on_guild_join(guild):
+        try:
+            await status.gen_status_text(guild)
+            print("Text generated and sent!", ephemeral=True)
+        except:  # noqa: E722
+            print("Someting went wrong!", ephemeral=True)
 
     @bot.event
     async def on_message(message):
@@ -126,7 +135,7 @@ def run():
             status_code = r.status_code
             print(f"status code: {status_code}\n{data}")
             if status_code == 200 and len(data) > 0:
-                task_index = len(data) - 1     # last one
+                task_index = len(data) - 1  # last one
                 task_title = data[task_index]["job"]["title"]
                 follow_up_view = ThreeButtonView()
                 follow_up_view.addressee = member
@@ -148,7 +157,7 @@ def run():
                         view=follow_up_view,
                     )
                     follow_up_view.channel = guild.text_channels[0]
-                
+
                 follow_up_view.ask_msg_id = ask_msg.id
 
             else:
@@ -212,7 +221,9 @@ def run():
                     )
                     await task2
 
-    @bot.tree.command(description="Create a new Job Request, so others can accept it and do it for you!")
+    @bot.tree.command(
+        description="Create a new Job Request, so others can accept it and do it for you!"
+    )
     async def post_job_request(interaction: discord.Interaction):
         d = {}
         d["discord_guild"] = interaction.guild_id
@@ -229,7 +240,7 @@ def run():
         job_submit_modal.users_info = d
 
         await interaction.response.send_modal(job_submit_modal)
-    
+
     @bot.tree.command(description="Create a new Job and accept it yourself!")
     async def new_task(interaction: discord.Interaction):
         d = {}
@@ -269,49 +280,14 @@ def run():
         status_code = r.status_code
         await ctx.send(f"status code: {status_code}\n{data}")
 
-    
     @bot.hybrid_command()
     async def gen_status_text(ctx):
-        guild = ctx.guild
-        members = guild.members
-        in_voice = []
-        not_in_voice = []
-        text = ""
+        try:
+            await status.gen_status_text(ctx.guild)
+            await ctx.send("Text generated and sent!", ephemeral=True)
+        except:  # noqa: E722
+            await ctx.send("Someting went wrong!", ephemeral=True)
 
-        for i in members:
-            if i.bot is False:
-                if i.voice is None:
-                    not_in_voice.append(i)
-                else:
-                    in_voice.append(i)
-
-        for i in in_voice:
-            # check if it should record a brief
-            # if true, then the person is idle
-            # if false, then read the brief
-            if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
-                # now read the brief
-                b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
-                text = text + i.mention + f":    :green_circle: {b}\n"
-            else:
-                text = text + i.mention + ":    :yellow_circle:\n"
-
-        for i in not_in_voice:
-            text = text + i.mention + ":    :black_circle:\n"
-        
-        category = discord.utils.get(guild.categories, name="JOBS")
-        if category is None:
-            category = await guild.create_category("JOBS")
-        da_channel = discord.utils.get(
-            guild.text_channels, name="status"
-        )
-        if da_channel is None:
-            da_channel = await guild.create_text_channel(
-                category=category, name="status"
-            )
-
-        await da_channel.send(text)
-    
     # @bot.hybrid_command()
     # async def token(ctx):
     #     users_info = {}
@@ -326,7 +302,6 @@ def run():
     #     users_info["discord_roles"] = roles_list
 
     #     await ctx.send(create_token(users_info), ephemeral=True)
-
 
     # @bot.tree.context_menu(name="Pause Task!")
     # async def pause_task(interaction: discord.Interaction, message: discord.Message):
