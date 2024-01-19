@@ -12,6 +12,7 @@ from briefing import briefing
 from modals.submit import JobSubmitModal
 from status import utils as status
 from views.ask_brief import AskBriefView
+from views.doingbuttons import DoingButtons
 from views.threebutton import ThreeButtonView
 
 logger = settings.logging.getLogger("bot")
@@ -299,7 +300,7 @@ def run():
             await ctx.send("Someting went wrong!", ephemeral=True)
 
     @bot.hybrid_command()
-    async def doings(ctx):
+    async def doing(ctx):
         users_info = {}
         users_info["discord_guild"] = ctx.guild.id
         users_info["discord_id"] = ctx.author.id
@@ -328,8 +329,12 @@ def run():
                 status_code = r.status_code
                 if status_code == 200:
                     jsm = JobSubmitModal()
+                    doing_buttons = DoingButtons()
+                    doing_buttons.headers = headers
+                    doing_buttons.job_id = job_id
                     await ctx.send(
                         f"{jsm.create_job_post_text(guild=ctx.guild, data=data)}",
+                        view=doing_buttons,
                         ephemeral=True,
                     )
                 else:
