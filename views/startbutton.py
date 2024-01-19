@@ -58,8 +58,11 @@ class StartView(discord.ui.View):
                 await w.delete()
 
             # deleting the ask msg
-            the_ask_msg = await channel.fetch_message(self.ask_msg_id)
-            await the_ask_msg.delete()
+            try:
+                the_ask_msg = await channel.fetch_message(self.ask_msg_id)
+                await the_ask_msg.delete()
+            except:  # noqa: E722
+                pass
 
             try:
                 (task,) = [
