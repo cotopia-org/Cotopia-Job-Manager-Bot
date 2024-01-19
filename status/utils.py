@@ -94,7 +94,7 @@ def get_status_text(guild_id: int):
     return result
 
 
-async def update_status_text(guild):
+async def update_status_text(guild, idles = None | None):
     text_row = get_status_text(guild_id=guild.id)
     if text_row is None:
         gen_status_text(guild)
@@ -116,12 +116,22 @@ async def update_status_text(guild):
         # check if it should record a brief
         # if true, then the person is idle
         # if false, then read the brief
+
+        # skip if she is in idles
+        if i in idles:
+            continue
+
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n"
+    
+    # Now adding idle ones
+    for i in idles:
+        text = text + ":yellow_circle:  " + i.mention + "\n"
+
 
     for i in not_in_voice:
         text = text + ":white_circle:   " + i.mention + "\n"
