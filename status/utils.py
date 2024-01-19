@@ -39,6 +39,9 @@ async def gen_status_text(guild):
     if da_channel is None:
         da_channel = await guild.create_text_channel(category=category, name="status")
 
+    if text == "":
+        text = "Nobody's here! 👻"
+
     da_msg = await da_channel.send(text)
 
     try:
@@ -145,6 +148,9 @@ async def update_status_text(guild, idles = None):
         channel = guild.get_channel(text_row[1])
         # the message id is text_row[2]
         msg = await channel.fetch_message(text_row[2])
+
+        if text == "":
+            text = "Nobody's here! 👻"
 
         await msg.edit(content=text)
 
