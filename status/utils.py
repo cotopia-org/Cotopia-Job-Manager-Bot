@@ -78,3 +78,62 @@ async def gen_status_text(guild):
         if sqliteConnection:
             sqliteConnection.close()
             print("SQLite Connection closed")
+
+
+def get_status_text(guild_id: int):
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * FROM status_txt WHERE guild_id = {guild_id};")
+
+    result = cursor.fetchone()
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return result
+
+
+async def update_status_text(guild):
+    text_row = get_status_text(guild_id=guild.id)
+    if text_row is None:
+        gen_status_text(guild)
+        text_row = get_status_text(guild_id=guild.id)
+
+    members = guild.members
+    in_voice = []
+    not_in_voice = []
+    text = ""
+
+    for i in members:
+        if i.bot is False:
+            if i.voice is None:
+                not_in_voice.append(i)
+            else:
+                in_voice.append(i)
+
+    for i in in_voice:
+        # check if it should record a brief
+        # if true, then the person is idle
+        # if false, then read the brief
+        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
+            # now read the brief
+            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
+            text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
+        else:
+            text = text + ":yellow_circle:  " + i.mention + "\n"
+
+    for i in not_in_voice:
+        text = text + ":white_circle:   " + i.mention + "\n"
+
+    # fetching the message
+    try:
+        # channel id is text_row[1]
+        channel = guild.get_channel(text_row[1])
+        # the message id is text_row[2]
+        msg = await channel.fetch_message(text_row[2])
+
+        await msg.edit(content=text)
+
+    except:  # noqa: E722
+        pass
