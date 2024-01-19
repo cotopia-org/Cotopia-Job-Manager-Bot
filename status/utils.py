@@ -55,11 +55,15 @@ async def gen_status_text(guild):
 
         cursor.execute(table_query)
 
+        # Deleting the row just in case
+        cursor.execute(f"DELETE FROM status_txt WHERE guild_id = {guild.id};")
+        sqliteConnection.commit()
         # Inserting data
         msg_query = f"""     INSERT INTO status_txt VALUES
                                 ({guild.id}, {da_channel.id}, {da_msg.id});"""
 
         cursor.execute(msg_query)
+        sqliteConnection.commit()
 
         # Close the cursor
         cursor.close()
@@ -72,6 +76,5 @@ async def gen_status_text(guild):
     # or failure
     finally:
         if sqliteConnection:
-            sqliteConnection.commit()
             sqliteConnection.close()
             print("SQLite Connection closed")
