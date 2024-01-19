@@ -195,7 +195,7 @@ def run():
                 print("Asking for brief was not canceled! Don't panic tho.")
             
             # updating job status
-            status.update_status_text(guild)
+            await status.update_status_text(guild)
 
         # ASKING FOR BRIEF
         global last_brief_ask
@@ -226,7 +226,7 @@ def run():
                     await task2
             
             # updating job status
-            status.update_status_text(guild)
+            await status.update_status_text(guild)
 
 
     @bot.tree.command(
