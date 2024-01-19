@@ -137,7 +137,8 @@ async def update_status_text(guild):
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
-            text = text + ":yellow_circle:  " + i.mention + "\n"
+            if i not in idles:
+                text = text + ":yellow_circle:  " + i.mention + "\n"
 
     # Now adding idle ones
     if idles is not None:
