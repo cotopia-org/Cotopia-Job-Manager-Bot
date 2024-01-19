@@ -156,3 +156,22 @@ async def update_status_text(guild, idles = None):
 
     except:  # noqa: E722
         pass
+
+
+def set_as_idle(guild_id, member_id):
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    cursor.execute( """CREATE TABLE IF NOT EXISTS idles(
+                                guild_id INT NOT NULL,
+                                member_id INT NOT NULL); """)
+    cursor.execute(f"""INSERT INTO status_txt VALUES ({guild_id}, {member_id});""")
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def remove_idle(guild_id, member_id):
+    pass
+
+def get_idles(guild):
+    pass
