@@ -165,7 +165,7 @@ def set_as_idle(guild_id, member_id):
                                 guild_id INT NOT NULL,
                                 member_id INT NOT NULL); """
     )
-    cursor.execute(f"""INSERT INTO status_txt VALUES ({guild_id}, {member_id});""")
+    cursor.execute(f"""INSERT INTO idles VALUES ({guild_id}, {member_id});""")
 
     conn.commit()
     cursor.close()
@@ -199,6 +199,6 @@ def get_idles(guild):
     else:
         members = []
         for each in result:
-            m = guild.get_member(each)
+            m = guild.get_member(each[0])
             members.append(m)
         return members
