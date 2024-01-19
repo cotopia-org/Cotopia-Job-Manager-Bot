@@ -5,6 +5,7 @@ import requests
 from persiantools.jdatetime import JalaliDate
 
 from briefing import briefing
+from status import utils as status
 
 
 class StartView(discord.ui.View):
@@ -70,6 +71,10 @@ class StartView(discord.ui.View):
                 task.cancel()
             except:  # noqa: E722
                 print("Asking for brief was not canceled! Don't panic tho.")
+
+            # updating job status
+            await status.update_status_text(interaction.guild)
+
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(

@@ -6,8 +6,8 @@ from persiantools.jdatetime import JalaliDate
 
 from bot_auth import create_token
 from briefing import briefing
+from status import utils as status
 from views.ask_brief import AskBriefView
-
 
 
 class ThreeButtonView(discord.ui.View):
@@ -65,6 +65,10 @@ class ThreeButtonView(discord.ui.View):
                 task.cancel()
             except:  # noqa: E722
                 print("Asking for brief was not canceled! Don't panic tho.")
+
+            # updating job status
+            await status.update_status_text(interaction.guild)
+
         else:
             await interaction.response.send_message(
                 "You are not the addressee!", ephemeral=True

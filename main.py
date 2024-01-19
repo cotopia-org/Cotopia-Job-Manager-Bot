@@ -99,6 +99,9 @@ def run():
                         except:  # noqa: E722
                             print("Asking for brief was not canceled! Don't panic tho.")
 
+                        # updating job status
+                        await status.update_status_text(message.guild)
+
         except:  # noqa: E722
             print("the message is not relevant!")
 
@@ -193,7 +196,7 @@ def run():
                 task.cancel()
             except:  # noqa: E722
                 print("Asking for brief was not canceled! Don't panic tho.")
-            
+
             # updating job status
             await status.update_status_text(guild)
 
@@ -224,10 +227,9 @@ def run():
                         ask_for_brief(), name=f"ask for brief {str(member)}@{guild.id}"
                     )
                     await task2
-            
+
             # updating job status
             await status.update_status_text(guild)
-
 
     @bot.tree.command(
         description="Create a new Job Request, so others can accept it and do it for you!"
