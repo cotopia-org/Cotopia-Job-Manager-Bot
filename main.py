@@ -181,7 +181,7 @@ def run():
                 ask_view.ask_msg_id = ask_msg.id
                 print(f"the ask msg id is {ask_view.ask_msg_id}")
 
-        # When user leaves voice channel
+        # When user leaves voice channels
         if after.channel is None:
             # cancelling asking for brief
             try:
@@ -193,6 +193,9 @@ def run():
                 task.cancel()
             except:  # noqa: E722
                 print("Asking for brief was not canceled! Don't panic tho.")
+            
+            # updating job status
+            status.update_status_text(guild)
 
         # ASKING FOR BRIEF
         global last_brief_ask
@@ -209,6 +212,7 @@ def run():
             else:
                 return False
 
+        # When user enters voice channels
         if before.channel is None:
             if briefing.should_record_brief(driver=str(guild.id), doer=str(member)):
                 if just_asked(str(member)) is False:
@@ -220,6 +224,10 @@ def run():
                         ask_for_brief(), name=f"ask for brief {str(member)}@{guild.id}"
                     )
                     await task2
+            
+            # updating job status
+            status.update_status_text(guild)
+
 
     @bot.tree.command(
         description="Create a new Job Request, so others can accept it and do it for you!"
