@@ -298,6 +298,45 @@ def run():
         except:  # noqa: E722
             await ctx.send("Someting went wrong!", ephemeral=True)
 
+    @bot.hybrid_command()
+    async def doings(ctx):
+        users_info = {}
+        users_info["discord_guild"] = ctx.guild.id
+        users_info["discord_id"] = ctx.author.id
+        users_info["discord_name"] = ctx.author.name
+        users_info["guild_name"] = ctx.guild.name
+        roles = ctx.author.roles
+        roles_list = []
+        for r in roles:
+            roles_list.append(r.name)
+        users_info["discord_roles"] = roles_list
+
+        headers = {"Authorization": create_token(users_info)}
+        url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+        r = requests.get(url=url, headers=headers)
+        data = r.json()
+        status_code = r.status_code
+        if status_code == 200:
+            if len(data) < 0:
+                await ctx.send("Your DOINGS list is empty.", ephemeral=True)
+            else:
+                task_index = len(data) - 1  # last one
+                job_id = data[task_index]["job"]["id"]
+                url = f"https://jobs-api.cotopia.social/bot/job/{job_id}"
+                r = requests.get(url=url, headers=headers)
+                data = r.json()
+                status_code = r.status_code
+                if status_code == 200:
+                    jsm = JobSubmitModal()
+                    await ctx.send(
+                        f"{jsm.create_job_post_text(guild=ctx.guild, data=data)}",
+                        ephemeral=True,
+                    )
+                else:
+                    await ctx.send(f"ERROR {status_code}\n{data}", ephemeral=True)
+        else:
+            await ctx.send(f"ERROR {status_code}\n{data}", ephemeral=True)
+
     # @bot.hybrid_command()
     # async def token(ctx):
     #     users_info = {}
