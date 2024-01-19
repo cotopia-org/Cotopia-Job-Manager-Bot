@@ -97,7 +97,7 @@ def get_status_text(guild_id: int):
     return result
 
 
-async def update_status_text(guild, idles = None):
+async def update_status_text(guild, idles=None):
     print("yooo we are here!")
     text_row = get_status_text(guild_id=guild.id)
     if text_row is None:
@@ -132,12 +132,11 @@ async def update_status_text(guild, idles = None):
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n"
-    
+
     # Now adding idle ones
     if idles is not None:
         for i in idles:
             text = text + ":yellow_circle:  " + i.mention + "\n"
-
 
     # for i in not_in_voice:
     #     text = text + ":white_circle:   " + i.mention + "\n"
@@ -161,17 +160,29 @@ async def update_status_text(guild, idles = None):
 def set_as_idle(guild_id, member_id):
     conn = sqlite3.connect("jobs.db")
     cursor = conn.cursor()
-    cursor.execute( """CREATE TABLE IF NOT EXISTS idles(
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS idles(
                                 guild_id INT NOT NULL,
-                                member_id INT NOT NULL); """)
+                                member_id INT NOT NULL); """
+    )
     cursor.execute(f"""INSERT INTO status_txt VALUES ({guild_id}, {member_id});""")
 
     conn.commit()
     cursor.close()
     conn.close()
 
+
 def remove_idle(guild_id, member_id):
-    pass
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        f"DELETE FROM idles WHERE guild_id = {guild_id} AND member_id = {member_id};"
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 
 def get_idles(guild):
     pass
