@@ -185,4 +185,20 @@ def remove_idle(guild_id, member_id):
 
 
 def get_idles(guild):
-    pass
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT member_id FROM idles WHERE guild_id = {guild.id}")
+    result = cursor.fetchall()
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    if result is None:
+        return None
+    else:
+        members = []
+        for each in result:
+            m = guild.get_member(each)
+            members.append(m)
+        return members
