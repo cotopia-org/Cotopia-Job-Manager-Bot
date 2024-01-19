@@ -97,14 +97,14 @@ def get_status_text(guild_id: int):
     return result
 
 
-async def update_status_text(guild, idles=None):
-    print("yooo we are here!")
+async def update_status_text(guild):
     text_row = get_status_text(guild_id=guild.id)
     if text_row is None:
         gen_status_text(guild)
         text_row = get_status_text(guild_id=guild.id)
 
     members = guild.members
+    idles = get_idles(guild=guild)
     in_voice = []
     not_in_voice = []
     text = ""
