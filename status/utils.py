@@ -26,8 +26,8 @@ async def gen_status_text(guild):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
             b = b.replace("\n", " ") # replace new lines with " "
-            if len(b) > 64:
-                b = b[:61] # only show first 61 charachters
+            if len(b) > 54:
+                b = b[:51] # only show first 51 charachters
                 b = b + "..."
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
@@ -140,8 +140,8 @@ async def update_status_text(guild):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
             b = b.replace("\n", " ") # replace new lines with " "
-            if len(b) > 64:
-                b = b[:61] # only show first 61 charachters
+            if len(b) > 54:
+                b = b[:51] # only show first 51 charachters
                 b = b + "..."
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
