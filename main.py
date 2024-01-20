@@ -9,6 +9,7 @@ from persiantools.jdatetime import JalaliDate
 import settings
 from bot_auth import create_token
 from briefing import briefing
+from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
 from views.ask_brief import AskBriefView, TodoView
@@ -395,6 +396,13 @@ def run():
             await ctx.interaction.followup.send(
                 f"ERROR {status_code}\n{data}", ephemeral=True
             )
+
+    @bot.tree.command()
+    async def brief(interaction: discord.Interaction):
+        brief_modal = BriefModal()
+        brief_modal.user = interaction.user
+        brief_modal.driver = interaction.guild_id
+        await interaction.response.send_modal(brief_modal)
 
     # @bot.hybrid_command()
     # async def token(ctx):
