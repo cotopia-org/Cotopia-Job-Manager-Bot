@@ -25,8 +25,7 @@ async def gen_status_text(guild):
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
-            b = b.split("\n")
-            b = b[0]
+            b = b.replace("\n", " ") # replace new lines with " "
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n"
@@ -137,8 +136,7 @@ async def update_status_text(guild):
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
-            b = b.split("\n")
-            b = b[0]
+            b = b.replace("\n", " ") # replace new lines with " "
             text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
         else:
             if i not in idles:
