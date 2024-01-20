@@ -67,7 +67,9 @@ class ThreeButtonView(discord.ui.View):
                 print("Asking for brief was not canceled! Don't panic tho.")
 
             # updating job status
-            status.remove_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            status.remove_idle(
+                guild_id=interaction.guild.id, member_id=interaction.user.id
+            )
             await status.update_status_text(interaction.guild)
 
         else:
@@ -105,6 +107,12 @@ class ThreeButtonView(discord.ui.View):
                 # deleting the ask msg
                 the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
                 await the_ask_msg.delete()
+
+                # updating job status
+                status.set_as_idle(
+                    guild_id=interaction.guild.id, member_id=interaction.user.id
+                )
+                await status.update_status_text(guild=interaction.guild)
 
                 # ask again what she's gonna do
                 ask_view = AskBriefView()
@@ -159,6 +167,12 @@ class ThreeButtonView(discord.ui.View):
                 # deleting the ask msg
                 the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
                 await the_ask_msg.delete()
+
+                # updating job status
+                status.set_as_idle(
+                    guild_id=interaction.guild.id, member_id=interaction.user.id
+                )
+                await status.update_status_text(guild=interaction.guild)
 
                 # ask again what she's gonna do
                 ask_view = AskBriefView()
