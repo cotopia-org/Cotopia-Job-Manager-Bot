@@ -11,7 +11,7 @@ from bot_auth import create_token
 from briefing import briefing
 from modals.submit import JobSubmitModal
 from status import utils as status
-from views.ask_brief import AskBriefView
+from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
 from views.threebutton import ThreeButtonView
 
@@ -101,7 +101,9 @@ def run():
                             print("Asking for brief was not canceled! Don't panic tho.")
 
                         # updating job status
-                        status.remove_idle(guild_id=message.guild.id, member_id=message.author.id)
+                        status.remove_idle(
+                            guild_id=message.guild.id, member_id=message.author.id
+                        )
                         await status.update_status_text(message.guild)
 
         except:  # noqa: E722
@@ -342,6 +344,57 @@ def run():
                     await ctx.send(f"ERROR {status_code}\n{data}", ephemeral=True)
         else:
             await ctx.send(f"ERROR {status_code}\n{data}", ephemeral=True)
+
+    @bot.hybrid_command()
+    async def todos(ctx):
+        await ctx.interaction.response.defer(ephemeral=True, thinking=True)
+        users_info = {}
+        users_info["discord_guild"] = ctx.guild.id
+        users_info["discord_id"] = ctx.author.id
+        users_info["discord_name"] = ctx.author.name
+        users_info["guild_name"] = ctx.guild.name
+        roles = ctx.author.roles
+        roles_list = []
+        for r in roles:
+            roles_list.append(r.name)
+        users_info["discord_roles"] = roles_list
+
+        headers = {"Authorization": create_token(users_info)}
+        # sending the request
+        url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+        r = requests.get(url=url, headers=headers)
+        data = r.json()
+        status_code = r.status_code
+        # request is ok
+        if status_code == 200:
+            # todo list is not empty
+            if len(data) > 0:
+                # making a drop down menu
+                rows = []
+                for each in data:
+                    rows.append(
+                        discord.SelectOption(
+                            label=each["job"]["title"],
+                            value=each["job"]["id"],
+                        )
+                    )
+
+                todo_view = TodoView(
+                    options=rows,
+                    placeholder="Select a TO-DO!",
+                    ask_msg_id=0,
+                )
+                await ctx.interaction.followup.send(
+                    "Select the task that you want to work on:", view=todo_view
+                )
+            # todo list is empty
+            else:
+                await ctx.interaction.followup.send("Your TO-DO list is empty! 🥳")
+        # request error
+        else:
+            await ctx.interaction.followup.send(
+                f"ERROR {status_code}\n{data}", ephemeral=True
+            )
 
     # @bot.hybrid_command()
     # async def token(ctx):
