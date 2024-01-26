@@ -33,8 +33,8 @@ class StartView(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.send_message(
-                "Task Status: Doing!", ephemeral=True
+            await interaction.response.edit_message(
+                content="Task Status: Doing!", view=None, delete_after=60
             )
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
