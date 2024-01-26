@@ -2,6 +2,7 @@ import discord
 import requests
 
 from status import utils as status
+from utils.event_recorder import write_event_to_db
 
 
 class DoingButtons(discord.ui.View):
@@ -18,11 +19,20 @@ class DoingButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
+            write_event_to_db(
+                driver=str(interaction.guild.id),
+                kind="TASK DONE",
+                doer=str(interaction.user.id),
+                isPair=False,
+                note="sent by job bot",
+            )
             await interaction.response.send_message(
                 "Task moved to DONE!", ephemeral=True
             )
             # updating job status
-            status.set_as_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            status.set_as_idle(
+                guild_id=interaction.guild.id, member_id=interaction.user.id
+            )
             await status.update_status_text(guild=interaction.guild)
         else:
             print(f"status code: {r.status_code}\n{data}")
@@ -38,11 +48,20 @@ class DoingButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
+            write_event_to_db(
+                driver=str(interaction.guild.id),
+                kind="TASK PAUSED",
+                doer=str(interaction.user.id),
+                isPair=False,
+                note="sent by job bot",
+            )
             await interaction.response.send_message(
                 "Task moved to TODO!", ephemeral=True
             )
             # updating job status
-            status.set_as_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            status.set_as_idle(
+                guild_id=interaction.guild.id, member_id=interaction.user.id
+            )
             await status.update_status_text(guild=interaction.guild)
         else:
             print(f"status code: {r.status_code}\n{data}")

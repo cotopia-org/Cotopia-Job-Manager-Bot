@@ -2,6 +2,7 @@ import discord
 import requests
 
 from bot_auth import create_token
+from utils.event_recorder import write_event_to_db
 from utils.job_id_coder import PREFIX, decode
 
 LINE = "-----------------------------------------------------\n"
@@ -34,6 +35,14 @@ class SubmittedJobView(discord.ui.View):
         status_code = r.status_code
 
         if status_code == 201:
+            write_event_to_db(
+                driver=str(interaction.guild.id),
+                kind="JOB ACCEPTED",
+                doer=str(interaction.user.id),
+                isPair=False,
+                note="sent by job bot",
+            )
+
             new_text = (
                 s[0]
                 + "Accepted by:\n"

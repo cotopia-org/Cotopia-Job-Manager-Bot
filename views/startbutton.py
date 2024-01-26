@@ -6,6 +6,7 @@ from persiantools.jdatetime import JalaliDate
 
 from briefing import briefing
 from status import utils as status
+from utils.event_recorder import write_event_to_db
 
 
 class StartView(discord.ui.View):
@@ -26,6 +27,13 @@ class StartView(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
+            write_event_to_db(
+                driver=str(interaction.guild.id),
+                kind="TASK STARTED",
+                doer=str(interaction.user.id),
+                isPair=False,
+                note="sent by job bot",
+            )
             await interaction.response.send_message(
                 "Task Status: Doing!", ephemeral=True
             )
@@ -76,7 +84,9 @@ class StartView(discord.ui.View):
                 print("Asking for brief was not canceled! Don't panic tho.")
 
             # updating job status
-            status.remove_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
+            status.remove_idle(
+                guild_id=interaction.guild.id, member_id=interaction.user.id
+            )
             await status.update_status_text(interaction.guild)
 
         else:

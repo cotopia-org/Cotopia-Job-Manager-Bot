@@ -7,6 +7,7 @@ from persiantools.jdatetime import JalaliDate
 from bot_auth import create_token
 from briefing import briefing
 from status import utils as status
+from utils.event_recorder import write_event_to_db
 from views.ask_brief import AskBriefView
 
 
@@ -101,6 +102,13 @@ class ThreeButtonView(discord.ui.View):
             data = r.json()
             if r.status_code == 200:
                 print(f"status code: {r.status_code}\n{data}")
+                write_event_to_db(
+                    driver=str(interaction.guild.id),
+                    kind="TASK DONE",
+                    doer=str(interaction.user.id),
+                    isPair=False,
+                    note="sent by job bot",
+                )
                 await interaction.response.send_message(
                     "Task Status: Done!", ephemeral=True
                 )
@@ -161,6 +169,13 @@ class ThreeButtonView(discord.ui.View):
             data = r.json()
             if r.status_code == 200:
                 print(f"status code: {r.status_code}\n{data}")
+                write_event_to_db(
+                    driver=str(interaction.guild.id),
+                    kind="TASK PAUSED",
+                    doer=str(interaction.user.id),
+                    isPair=False,
+                    note="sent by job bot",
+                )
                 await interaction.response.send_message(
                     "Task Status: Todo!!", ephemeral=True
                 )
