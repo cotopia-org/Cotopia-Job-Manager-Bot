@@ -203,7 +203,7 @@ class TodoDropDown(discord.ui.Select):
         body = body + tags
 
         # if "acceptors" in data:
-        #     acceptors = "**Accepted By:**\n" + data["acceptors"][0].mention
+        #     acceptors = "**Accepted By:**\n" + str(data["acceptors"][0])
         # else:
         #     acceptors = "**Accepted By:** " + "-" + "\n"
 

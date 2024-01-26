@@ -48,7 +48,7 @@ class SubmittedJobView(discord.ui.View):
             new_text = (
                 s[0]
                 + "Accepted by:\n"
-                + interaction.user.mention
+                + str(interaction.user)
                 + "\n"
                 + LINE
                 + "id: "

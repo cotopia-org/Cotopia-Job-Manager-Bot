@@ -216,7 +216,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         body = body + tags
 
         if "acceptors" in data:
-            acceptors = "**Accepted By:**\n" + data["acceptors"][0].mention
+            acceptors = "**Accepted By:**\n" + str(data["acceptors"][0])
         else:
             acceptors = "**Accepted By:** " + "-" + "\n"
 
