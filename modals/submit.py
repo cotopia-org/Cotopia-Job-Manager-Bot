@@ -33,7 +33,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         label="Description",
         placeholder="Please describe the job as clearly as possible.",
         max_length=512,
-        required=False,
+        required=True,
     )
     tags = discord.ui.TextInput(
         style=discord.TextStyle.short,
