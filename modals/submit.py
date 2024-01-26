@@ -97,7 +97,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 kind="JOB SUBMITED",
                 doer=str(interaction.user.id),
                 isPair=False,
-                note="sent by job bot",
             )
             post_data = data
 
@@ -116,7 +115,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                         kind="JOB ACCEPTED",
                         doer=str(interaction.user.id),
                         isPair=False,
-                        note="sent by job bot",
                     )
                     post_data["acceptors"] = [interaction.user]
 

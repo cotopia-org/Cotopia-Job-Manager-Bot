@@ -24,7 +24,6 @@ class DoingButtons(discord.ui.View):
                 kind="TASK DONE",
                 doer=str(interaction.user.id),
                 isPair=False,
-                note="sent by job bot",
             )
             await interaction.response.send_message(
                 "Task moved to DONE!", ephemeral=True
@@ -53,7 +52,6 @@ class DoingButtons(discord.ui.View):
                 kind="TASK PAUSED",
                 doer=str(interaction.user.id),
                 isPair=False,
-                note="sent by job bot",
             )
             await interaction.response.send_message(
                 "Task moved to TODO!", ephemeral=True

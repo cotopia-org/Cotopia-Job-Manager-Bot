@@ -40,7 +40,6 @@ class SubmittedJobView(discord.ui.View):
                 kind="JOB ACCEPTED",
                 doer=str(interaction.user.id),
                 isPair=False,
-                note="sent by job bot",
             )
 
             new_text = (

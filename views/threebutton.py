@@ -107,7 +107,6 @@ class ThreeButtonView(discord.ui.View):
                     kind="TASK DONE",
                     doer=str(interaction.user.id),
                     isPair=False,
-                    note="sent by job bot",
                 )
                 await interaction.response.send_message(
                     "Task Status: Done!", ephemeral=True
@@ -174,7 +173,6 @@ class ThreeButtonView(discord.ui.View):
                     kind="TASK PAUSED",
                     doer=str(interaction.user.id),
                     isPair=False,
-                    note="sent by job bot",
                 )
                 await interaction.response.send_message(
                     "Task Status: Todo!!", ephemeral=True

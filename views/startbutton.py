@@ -32,7 +32,6 @@ class StartView(discord.ui.View):
                 kind="TASK STARTED",
                 doer=str(interaction.user.id),
                 isPair=False,
-                note="sent by job bot",
             )
             await interaction.response.send_message(
                 "Task Status: Doing!", ephemeral=True
