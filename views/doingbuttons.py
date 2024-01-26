@@ -25,8 +25,8 @@ class DoingButtons(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.send_message(
-                "Task moved to DONE!", ephemeral=True
+            await interaction.response.edit_message(
+                content="Task moved to DONE!", view=None, delete_after=60
             )
             # updating job status
             status.set_as_idle(
@@ -53,8 +53,8 @@ class DoingButtons(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.send_message(
-                "Task moved to TODO!", ephemeral=True
+            await interaction.response.edit_message(
+                content="Task moved to TODO!", view=None, delete_after=60
             )
             # updating job status
             status.set_as_idle(
