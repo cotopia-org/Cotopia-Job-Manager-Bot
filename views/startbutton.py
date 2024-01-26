@@ -10,7 +10,7 @@ from utils.event_recorder import write_event_to_db
 
 
 class StartView(discord.ui.View):
-    def __init__(self, *, timeout: float | None = 180):
+    def __init__(self, *, timeout: float | None = 1900800):
         super().__init__(timeout=timeout)
         self.headers = None
         self.job_id = 0

@@ -12,7 +12,7 @@ from views.ask_brief import AskBriefView
 
 
 class ThreeButtonView(discord.ui.View):
-    def __init__(self, *, timeout: float | None = 180):
+    def __init__(self, *, timeout: float | None = 1900800):
         super().__init__(timeout=timeout)
         self.addressee = None  # the user that is asked for brief
         self.job_id = 0

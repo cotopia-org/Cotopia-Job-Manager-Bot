@@ -9,6 +9,9 @@ LINE = "-----------------------------------------------------\n"
 
 
 class SubmittedJobView(discord.ui.View):
+    def __init__(self, *, timeout: float | None = 1900800):
+        super().__init__(timeout=timeout)
+
     @discord.ui.button(label="🤝 Accept", style=discord.ButtonStyle.secondary)
     async def accept(self, interaction: discord.Integration, button: discord.ui.Button):
         users_info = {}

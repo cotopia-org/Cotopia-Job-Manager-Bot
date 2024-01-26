@@ -12,7 +12,7 @@ from views.startbutton import StartView
 
 
 class AskBriefView(discord.ui.View):
-    def __init__(self, *, timeout: float | None = 3600):
+    def __init__(self, *, timeout: float | None = 1900800):
         super().__init__(timeout=timeout)
         self.addressee = None  # the user that is asked for brief
         self.ask_msg_id = 0
@@ -221,7 +221,7 @@ class TodoView(discord.ui.View):
         options: List[SelectOption],
         placeholder: str,
         ask_msg_id: int,
-        timeout: float | None = 3600,
+        timeout: float | None = 1900800,
     ):
         super().__init__(timeout=timeout)
         todo_dropdown = TodoDropDown(options=options, placeholder=placeholder)
