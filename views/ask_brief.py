@@ -140,7 +140,7 @@ class TodoDropDown(discord.ui.Select):
         self.ask_msg_id = 0
 
     async def callback(self, interaction: discord.Integration):
-        await interaction.response.defer(ephemeral=True, thinking=True)
+        # await interaction.response.defer(ephemeral=True, thinking=True)
 
         job_id = self.values[0]
         # creating token
@@ -168,12 +168,12 @@ class TodoDropDown(discord.ui.Select):
             startview.job_id = data["id"]
             startview.job_title = data["title"]
             startview.ask_msg_id = self.ask_msg_id
-            await interaction.followup.send(
-                content=content, view=startview, ephemeral=True
+            await interaction.response.edit_message(
+                content=content, view=startview
             )
 
         else:
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 f"ERROR {status_code}\n{data}", ephemeral=True
             )
 
