@@ -34,4 +34,5 @@ def write_event_to_db(driver: str, kind: str, doer: str, isPair: bool, note: str
     conn.commit()
     cur.close()
     conn.close()
+    print(f"EVENT ADDED id:{id_of_added_row}")
     return id_of_added_row
