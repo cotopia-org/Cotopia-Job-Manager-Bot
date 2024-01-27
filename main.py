@@ -16,9 +16,6 @@ from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
 from views.threebutton import ThreeButtonView
 
-import sqlite3
-
-
 logger = settings.logging.getLogger("bot")
 
 last_brief_ask = {}
@@ -158,7 +155,7 @@ def run():
                         + member.mention
                         + f"!\nDo you want to continue working on **'{task_title}'**?",
                         view=follow_up_view,
-                        delete_after=1800
+                        delete_after=1800,
                     )
                     follow_up_view.channel = guild.system_channel
                 except:  # noqa: E722
@@ -167,7 +164,7 @@ def run():
                         + member.mention
                         + f"!\nDo you want to continue working on **'{task_title}'**?",
                         view=follow_up_view,
-                        delete_after=1800
+                        delete_after=1800,
                     )
                     follow_up_view.channel = guild.text_channels[0]
 
@@ -182,7 +179,7 @@ def run():
                         + member.mention
                         + "!\nWhat are you going to do today?",
                         view=ask_view,
-                        delete_after=1800
+                        delete_after=1800,
                     )
                 except:  # noqa: E722
                     ask_msg = await guild.text_channels[0].send(
@@ -190,7 +187,7 @@ def run():
                         + member.mention
                         + "!\nWhat are you going to do today?",
                         view=ask_view,
-                        delete_after=1800
+                        delete_after=1800,
                     )
 
                 ask_view.ask_msg_id = ask_msg.id
@@ -429,20 +426,6 @@ def run():
     # @bot.tree.context_menu(name="Pause Task!")
     # async def pause_task(interaction: discord.Interaction, message: discord.Message):
     #     await interaction.response.send_message("this is not a task!")
-    
-    @bot.hybrid_command()
-    async def get_idles(ctx):
-        idles = status.get_idles(ctx.guild)
-        await ctx.send(idles, ephemeral=True)
-    
-    @bot.hybrid_command()
-    async def drop_idles(ctx):
-        conn = sqlite3.connect("jobs.db")
-        cursor = conn.cursor()
-        cursor.execute("DROP TABLE idles;")
-        conn.commit()
-        cursor.close()
-        conn.close()
 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
