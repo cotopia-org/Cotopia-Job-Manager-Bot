@@ -179,7 +179,9 @@ def set_as_idle(guild_id, member_id):
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS idles(
                                 guild_id INT NOT NULL,
-                                member_id INT NOT NULL); """
+                                member_id INT NOT NULL,
+                                UNIQUE(guild_id, member_id)
+                                ); """
     )
     cursor.execute(f"""INSERT INTO idles VALUES ({guild_id}, {member_id});""")
 
