@@ -3,6 +3,7 @@ import sqlite3
 import discord
 
 from briefing import briefing
+from utils import job_posts
 
 
 async def gen_status_text(guild):
@@ -25,11 +26,24 @@ async def gen_status_text(guild):
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
-            b = b.replace("\n", " ") # replace new lines with " "
+
+            # remove "   id:" and set job_id
+            b = b.split("   id:")
+            try:
+                job_id = int(b[1])
+                url = job_posts.get_job_link(job_id=job_id, guild=guild)
+                link = f"   [view]({url})"
+            except:  # noqa: E722
+                link = ""
+            b = b[0]
+
+            b = b.replace("\n", " ")  # replace new lines with " "
             if len(b) > 54:
-                b = b[:51] # only show first 51 charachters
+                b = b[:51]  # only show first 51 charachters
                 b = b + "..."
-            text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
+            text = (
+                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n"
+            )
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n"
 
@@ -139,11 +153,24 @@ async def update_status_text(guild):
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
-            b = b.replace("\n", " ") # replace new lines with " "
+
+            # remove "   id:" and set job_id
+            b = b.split("   id:")
+            try:
+                job_id = int(b[1])
+                url = job_posts.get_job_link(job_id=job_id, guild=guild)
+                link = f"   [view]({url})"
+            except:  # noqa: E722
+                link = ""
+            b = b[0]
+
+            b = b.replace("\n", " ")  # replace new lines with " "
             if len(b) > 54:
-                b = b[:51] # only show first 51 charachters
+                b = b[:51]  # only show first 51 charachters
                 b = b + "..."
-            text = text + ":green_circle:   " + i.mention + f"  --->    {b}\n"
+            text = (
+                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n"
+            )
         else:
             if i not in idles:
                 text = text + ":yellow_circle:  " + i.mention + "\n"
