@@ -18,7 +18,7 @@ class AskBriefView(discord.ui.View):
         self.ask_msg_id = 0
 
     @discord.ui.button(label="➕ Create NEW Task", style=discord.ButtonStyle.primary)
-    async def write(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def write(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.addressee == interaction.user:
             d = {}
             d["discord_guild"] = interaction.guild_id
@@ -43,7 +43,7 @@ class AskBriefView(discord.ui.View):
             )
 
     @discord.ui.button(label="🗂️ Your TO-DOs", style=discord.ButtonStyle.secondary)
-    async def tasks(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def tasks(self, interaction: discord.Interaction, button: discord.ui.Button):
         # check if the adressee is the one who clicked the button
         if self.addressee == interaction.user:
             # showing that the bot is thinking...
@@ -106,7 +106,7 @@ class AskBriefView(discord.ui.View):
 
     # @discord.ui.button(label="Browse Requests", style=discord.ButtonStyle.primary)
     # async def job_requests(
-    #     self, interaction: discord.Integration, button: discord.ui.Button
+    #     self, interaction: discord.Interaction, button: discord.ui.Button
     # ):
     #     if self.addressee == interaction.user:
     #         pass
@@ -139,7 +139,7 @@ class TodoDropDown(discord.ui.Select):
         )
         self.ask_msg_id = 0
 
-    async def callback(self, interaction: discord.Integration):
+    async def callback(self, interaction: discord.Interaction):
         # await interaction.response.defer(ephemeral=True, thinking=True)
 
         job_id = self.values[0]
@@ -168,9 +168,7 @@ class TodoDropDown(discord.ui.Select):
             startview.job_id = data["id"]
             startview.job_title = data["title"]
             startview.ask_msg_id = self.ask_msg_id
-            await interaction.response.edit_message(
-                content=content, view=startview
-            )
+            await interaction.response.edit_message(content=content, view=startview)
 
         else:
             await interaction.response.send_message(

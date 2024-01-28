@@ -12,7 +12,7 @@ class DoingButtons(discord.ui.View):
         self.job_id = 0
 
     @discord.ui.button(label="✅ Done", style=discord.ButtonStyle.secondary)
-    async def done(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def done(self, interaction: discord.Interaction, button: discord.ui.Button):
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
@@ -40,7 +40,7 @@ class DoingButtons(discord.ui.View):
             )
 
     @discord.ui.button(label="⏸️ Pause", style=discord.ButtonStyle.secondary)
-    async def todo(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def todo(self, interaction: discord.Interaction, button: discord.ui.Button):
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "todo"}
         r = requests.put(url=url, json=pl, headers=self.headers)

@@ -19,7 +19,7 @@ class StartView(discord.ui.View):
 
     @discord.ui.button(label="▶️ Start", style=discord.ButtonStyle.green)
     async def startjob(
-        self, interaction: discord.Integration, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}

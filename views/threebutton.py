@@ -21,7 +21,7 @@ class ThreeButtonView(discord.ui.View):
         self.channel = None
 
     @discord.ui.button(label="Yes!", style=discord.ButtonStyle.primary)
-    async def yes(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def yes(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.addressee == interaction.user:
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
@@ -80,7 +80,7 @@ class ThreeButtonView(discord.ui.View):
 
     @discord.ui.button(label="No, it's done!", style=discord.ButtonStyle.secondary)
     async def no_done(
-        self, interaction: discord.Integration, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
             # make token and headers
@@ -146,7 +146,7 @@ class ThreeButtonView(discord.ui.View):
 
     @discord.ui.button(label="No, it's paused!", style=discord.ButtonStyle.secondary)
     async def no_later(
-        self, interaction: discord.Integration, button: discord.ui.Button
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
             # make token and headers
