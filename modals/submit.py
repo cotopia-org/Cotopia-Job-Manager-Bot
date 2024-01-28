@@ -6,7 +6,6 @@ import requests
 
 from bot_auth import create_token
 from utils.event_recorder import write_event_to_db
-from utils.job_id_coder import gen_code
 from utils.job_posts import record_id
 from views.startbutton import StartView
 from views.submitted_job import SubmittedJobView
@@ -225,8 +224,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         else:
             acceptors = "**Accepted By:** " + "-" + "\n"
 
-        id_line = "id: " + gen_code(data["id"])
-
-        content = title + LINE + body + LINE + acceptors + LINE + id_line
+        content = title + LINE + body + LINE + acceptors
 
         return content
