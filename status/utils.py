@@ -31,7 +31,7 @@ async def gen_status_text(guild):
             b = b.split("   id:")
             try:
                 job_id = int(b[1])
-                url = job_posts.get_job_link(job_id=job_id, guild=guild)
+                url = await job_posts.get_job_link(job_id=job_id, guild=guild)
                 link = f"   [view]({url})"
             except:  # noqa: E722
                 link = ""
@@ -158,7 +158,7 @@ async def update_status_text(guild):
             b = b.split("   id:")
             try:
                 job_id = int(b[1])
-                url = job_posts.get_job_link(job_id=job_id, guild=guild)
+                url = await job_posts.get_job_link(job_id=job_id, guild=guild)
                 link = f"   [view]({url})"
             except:  # noqa: E722
                 link = ""
