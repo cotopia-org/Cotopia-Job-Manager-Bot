@@ -3,9 +3,7 @@ import requests
 
 from bot_auth import create_token
 from utils.event_recorder import write_event_to_db
-from utils.job_id_coder import PREFIX, decode
-
-LINE = "-----------------------------------------------------\n"
+from utils.job_posts import get_job_id
 
 
 class SubmittedJobView(discord.ui.View):
@@ -13,7 +11,7 @@ class SubmittedJobView(discord.ui.View):
         super().__init__(timeout=timeout)
 
     @discord.ui.button(label="🤝 Accept", style=discord.ButtonStyle.secondary)
-    async def accept(self, interaction: discord.Integration, button: discord.ui.Button):
+    async def accept(self, interaction: discord.Interaction, button: discord.ui.Button):
         users_info = {}
         users_info["discord_guild"] = interaction.guild_id
         users_info["discord_id"] = interaction.user.id
@@ -27,9 +25,11 @@ class SubmittedJobView(discord.ui.View):
 
         headers = {"Authorization": create_token(users_info)}
 
-        text = interaction.message.content
-        s = text.split("id: " + PREFIX, 1)
-        job_id = decode(PREFIX + s[1])
+        job_id = get_job_id(
+            post_id=interaction.message.id,
+            channel_id=interaction.channel.id,
+            guild_id=interaction.guild.id,
+        )
 
         url = f"https://jobs-api.cotopia.social/bot/accept/{job_id}"
 
@@ -44,17 +44,15 @@ class SubmittedJobView(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-
-            new_text = (
-                s[0]
-                + "Accepted by:\n"
-                + str(interaction.user)
-                + "\n"
-                + LINE
-                + "id: "
-                + PREFIX
-                + s[1]
-            )
+            old_text = interaction.message.content
+            s = old_text.split("**Accepted By:**")
+            new_text = s[0]
+            if s[1] == " -\n":
+                new_text = new_text + "**Accepted By:**\n" + str(interaction.user)
+            else:
+                new_text = (
+                    new_text + "**Accepted By:**" + s[1] + ", " + str(interaction.user)
+                )
             await interaction.response.edit_message(content=new_text)
         else:
             await interaction.response.send_message(
