@@ -20,6 +20,7 @@ def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
     conn.commit()
     cursor.close()
     conn.close()
+    print("POST ID RECORDED!")
 
 
 def get_job_id(post_id: int, channel_id: int, guild_id: int):

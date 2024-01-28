@@ -7,6 +7,7 @@ import requests
 from bot_auth import create_token
 from utils.event_recorder import write_event_to_db
 from utils.job_id_coder import gen_code
+from utils.job_posts import record_id
 from views.startbutton import StartView
 from views.submitted_job import SubmittedJobView
 
@@ -179,11 +180,15 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             the_name = user.nick
 
         view = SubmittedJobView()
-        await webhook.send(
+        msg = await webhook.send(
             content=content,
             username=the_name,
             avatar_url=user.avatar,
             view=view,
+            wait=True,
+        )
+        record_id(
+            job_id=data["id"], post_id=msg.id, channel_id=channel.id, guild_id=guild.id
         )
 
         webhooks = await channel.webhooks()
