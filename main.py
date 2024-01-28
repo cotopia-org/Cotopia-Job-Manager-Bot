@@ -279,25 +279,25 @@ def run():
 
         await interaction.response.send_modal(job_submit_modal)
 
-    @bot.hybrid_command()
-    async def my_tasks(ctx):
-        users_info = {}
-        users_info["discord_guild"] = ctx.guild.id
-        users_info["discord_id"] = ctx.author.id
-        users_info["discord_name"] = ctx.author.name
-        users_info["guild_name"] = ctx.guild.name
-        roles = ctx.author.roles
-        roles_list = []
-        for r in roles:
-            roles_list.append(r.name)
-        users_info["discord_roles"] = roles_list
+    # @bot.hybrid_command()
+    # async def my_tasks(ctx):
+    #     users_info = {}
+    #     users_info["discord_guild"] = ctx.guild.id
+    #     users_info["discord_id"] = ctx.author.id
+    #     users_info["discord_name"] = ctx.author.name
+    #     users_info["guild_name"] = ctx.guild.name
+    #     roles = ctx.author.roles
+    #     roles_list = []
+    #     for r in roles:
+    #         roles_list.append(r.name)
+    #     users_info["discord_roles"] = roles_list
 
-        headers = {"Authorization": create_token(users_info)}
-        url = "https://jobs-api.cotopia.social/bot/accepted_jobs/me"
-        r = requests.get(url=url, headers=headers)
-        data = r.json()
-        status_code = r.status_code
-        await ctx.send(f"status code: {status_code}\n{data}")
+    #     headers = {"Authorization": create_token(users_info)}
+    #     url = "https://jobs-api.cotopia.social/bot/accepted_jobs/me"
+    #     r = requests.get(url=url, headers=headers)
+    #     data = r.json()
+    #     status_code = r.status_code
+    #     await ctx.send(f"status code: {status_code}\n{data}")
 
     @bot.hybrid_command()
     async def gen_status_text(ctx):
