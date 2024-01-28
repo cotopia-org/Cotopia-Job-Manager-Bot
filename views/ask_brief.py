@@ -7,7 +7,6 @@ from discord.components import SelectOption
 
 from bot_auth import create_token
 from modals.submit import JobSubmitModal
-from utils.job_id_coder import gen_code
 from views.startbutton import StartView
 
 
@@ -200,14 +199,7 @@ class TodoDropDown(discord.ui.Select):
                 tags = tags + "**[" + t + "]** "
         body = body + tags
 
-        # if "acceptors" in data:
-        #     acceptors = "**Accepted By:**\n" + str(data["acceptors"][0])
-        # else:
-        #     acceptors = "**Accepted By:** " + "-" + "\n"
-
-        id_line = "id: " + gen_code(data["id"])
-
-        content = title + LINE + body + LINE + id_line
+        content = title + LINE + body
 
         return content
 
