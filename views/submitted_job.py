@@ -47,7 +47,7 @@ class SubmittedJobView(discord.ui.View):
             old_text = interaction.message.content
             s = old_text.split("**Accepted By:**")
             new_text = s[0]
-            if s[1] == " -\n":
+            if s[1] == " -":
                 new_text = new_text + "**Accepted By:**\n" + str(interaction.user)
             else:
                 new_text = (
