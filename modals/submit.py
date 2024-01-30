@@ -94,7 +94,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             print(f"status code: {r.status_code}\n{data}")
             write_event_to_db(
                 driver=str(interaction.guild.id),
-                kind="JOB SUBMITED",
+                kind="JOB SUBMITTED",
                 doer=str(interaction.user.id),
                 isPair=False,
             )
