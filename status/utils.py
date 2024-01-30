@@ -45,13 +45,13 @@ async def gen_status_text(guild):
                 b = b[:51]  # only show first 51 charachters
                 b = b + "..."
             text = (
-                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n"
+                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n\n"
             )
         else:
-            text = text + ":yellow_circle:  " + i.mention + "\n"
+            text = text + ":yellow_circle:  " + i.mention + "\n\n"
 
     # for i in not_in_voice:
-    #     text = text + ":white_circle:   " + i.mention + "\n"
+    #     text = text + ":white_circle:   " + i.mention + "\n\n"
 
     category = discord.utils.get(guild.categories, name="JOBS")
     if category is None:
@@ -175,20 +175,20 @@ async def update_status_text(guild):
                 b = b[:51]  # only show first 51 charachters
                 b = b + "..."
             text = (
-                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n"
+                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n\n"
             )
         else:
             if i not in idles:
-                text = text + ":yellow_circle:  " + i.mention + "\n"
+                text = text + ":yellow_circle:  " + i.mention + "\n\n"
 
     # Now adding idle ones
     if idles is not None:
         for i in idles:
             if i not in not_in_voice:
-                text = text + ":yellow_circle:  " + i.mention + "\n"
+                text = text + ":yellow_circle:  " + i.mention + "\n\n"
 
     # for i in not_in_voice:
-    #     text = text + ":white_circle:   " + i.mention + "\n"
+    #     text = text + ":white_circle:   " + i.mention + "\n\n"
 
     # fetching the message
     try:
