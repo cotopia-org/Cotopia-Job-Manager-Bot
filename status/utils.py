@@ -62,6 +62,8 @@ async def gen_status_text(guild):
 
     if text == "":
         text = "Nobody's here! 👻"
+    else:
+        text = "‌\n" + text + "\n‌"
 
     da_msg = await da_channel.send(text)
 
@@ -199,6 +201,8 @@ async def update_status_text(guild):
 
         if text == "":
             text = "Nobody's here! 👻"
+        else:
+            text = "‌\n" + text + "\n‌"
 
         await msg.edit(content=text)
 
