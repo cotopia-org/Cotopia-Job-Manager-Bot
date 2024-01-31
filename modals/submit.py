@@ -127,7 +127,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             print(f"ERROR {r.status_code}\n{data}")
 
         if post_data != {}:
-            await self.post_the_job_to_channel(
+            post_msg = await self.post_the_job_to_channel(
                 guild=interaction.guild,
                 channel=da_channel,
                 user=interaction.user,
@@ -140,17 +140,13 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 startview.job_title = data["title"]
                 startview.ask_msg_id = self.ask_msg_id
                 await interaction.followup.send(
-                    content=self.create_job_post_text(
-                        guild=interaction.guild, data=post_data
-                    ),
+                    content=post_msg.content,
                     view=startview,
                     ephemeral=True,
                 )
             else:
                 await interaction.followup.send(
-                    content=self.create_job_post_text(
-                        guild=interaction.guild, data=post_data
-                    ),
+                    content="Job Request Posted!\n\n" + post_msg.jump_url,
                     ephemeral=True,
                 )
 
@@ -178,6 +174,8 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         webhooks = await channel.webhooks()
         for w in webhooks:
             await w.delete()
+
+        return msg
 
     def create_job_post_text(self, guild, data):
         LINE = "\n-----------------------------------------------------\n"
