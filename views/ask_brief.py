@@ -175,31 +175,34 @@ class TodoDropDown(discord.ui.Select):
             )
 
     def create_job_post_text(self, guild, data):
-        LINE = "\n-----------------------------------------------------\n"
+        # LINE = "\n-----------------------------------------------------\n"
 
         title = "## " + data["title"]
 
         if data["description"]:
-            body = "**Description:**\n" + data["description"] + "\n"
+            body = "\n" + data["description"] + "\n"
         else:
-            body = "**Description:** " + "-" + "\n"
+            # body = "\n**Description:** " + "-" + "\n"
+            pass
         ws = data["workspace"].replace(guild.name + "/", "")
         if len(ws) > 0:
-            body = body + "**Workspace:** " + ws + "\n"
+            body = body + "📁 **Workspace:** " + ws + "\n"
         else:
-            body = body + "**Workspace:** " + "-" + "\n"
+            # body = body + "**Workspace:** " + "-" + "\n"
+            pass
         if data["deadline"]:
             deadline = datetime.strptime(data["deadline"], "%Y-%m-%dT%H:%M:%S")
-            body = body + "**Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+            body = body + "⌛ **Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
         else:
-            body = body + "**Deadline:** " + "-" + "\n"
+            # body = body + "**Deadline:** " + "-" + "\n"
+            pass
         tags = ""
         if data["tags"]:
             for t in data["tags"]:
                 tags = tags + "**[" + t + "]** "
         body = body + tags
 
-        content = title + LINE + body
+        content = title + body
 
         return content
 
