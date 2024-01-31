@@ -56,9 +56,9 @@ async def gen_status_text(guild):
     category = discord.utils.get(guild.categories, name="JOBS")
     if category is None:
         category = await guild.create_category("JOBS")
-    da_channel = discord.utils.get(guild.text_channels, name="status")
+    da_channel = discord.utils.get(guild.text_channels, name="📊-status")
     if da_channel is None:
-        da_channel = await guild.create_text_channel(category=category, name="status")
+        da_channel = await guild.create_text_channel(category=category, name="📊-status")
 
     if text == "":
         text = "Nobody's here! 👻"
