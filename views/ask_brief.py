@@ -178,6 +178,7 @@ class TodoDropDown(discord.ui.Select):
         # LINE = "\n-----------------------------------------------------\n"
 
         title = "## " + data["title"]
+        body = ""
 
         if data["description"]:
             body = "\n" + data["description"] + "\n"
