@@ -22,18 +22,18 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         placeholder="Title of the job",
         required=True,
     )
-    workspace = discord.ui.TextInput(
-        style=discord.TextStyle.short,
-        label="Workspace",
-        placeholder="What category/workspace it belongs to?",
-        required=False,
-    )
     description = discord.ui.TextInput(
         style=discord.TextStyle.paragraph,
         label="Description",
         placeholder="Please describe the job as clearly as possible.",
         max_length=512,
         required=True,
+    )
+    workspace = discord.ui.TextInput(
+        style=discord.TextStyle.short,
+        label="Workspace",
+        placeholder="What category/workspace it belongs to?",
+        required=False,
     )
     tags = discord.ui.TextInput(
         style=discord.TextStyle.short,
@@ -50,7 +50,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
     deadline = discord.ui.TextInput(
         style=discord.TextStyle.short,
         label="Deadline",
-        placeholder="yyy-mm-dd HH:MM",
+        placeholder="yyyy-mm-dd HH:MM",
         required=False,
     )
 
@@ -200,19 +200,22 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         title = "## " + data["title"]
 
         if data["description"]:
-            body = "**Description:**\n" + data["description"] + "\n"
+            body = "\n" + data["description"] + "\n"
         else:
-            body = "**Description:** " + "-" + "\n"
+            # body = "\n**Description:** " + "-" + "\n"
+            pass
         ws = data["workspace"].replace(guild.name + "/", "")
         if len(ws) > 0:
-            body = body + "**Workspace:** " + ws + "\n"
+            body = body + "📁 **Workspace:** " + ws + "\n"
         else:
-            body = body + "**Workspace:** " + "-" + "\n"
+            # body = body + "**Workspace:** " + "-" + "\n"
+            pass
         if data["deadline"]:
             deadline = datetime.strptime(data["deadline"], "%Y-%m-%dT%H:%M:%S")
-            body = body + "**Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+            body = body + "⌛ **Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
         else:
-            body = body + "**Deadline:** " + "-" + "\n"
+            # body = body + "**Deadline:** " + "-" + "\n"
+            pass
         tags = ""
         if data["tags"]:
             for t in data["tags"]:
@@ -224,6 +227,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         else:
             acceptors = "**Accepted By:** " + "-" + "\n"
 
-        content = title + LINE + body + LINE + acceptors
+        content = title + body + LINE + acceptors
 
         return content
