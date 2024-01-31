@@ -45,9 +45,9 @@ def run():
     async def on_guild_join(guild):
         try:
             await status.gen_status_text(guild)
-            print("Text generated and sent!", ephemeral=True)
+            print("Text generated and sent!")
         except:  # noqa: E722
-            print("Someting went wrong!", ephemeral=True)
+            print("Someting went wrong when status.gen_status_text() was called.")
 
     @bot.event
     async def on_message(message):
