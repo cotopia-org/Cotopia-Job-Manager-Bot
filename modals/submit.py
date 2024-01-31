@@ -88,9 +88,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         data = r.json()
 
         if r.status_code == 201:
-            # await interaction.response.send_message(
-            #     "Job Successfully Submitted!", ephemeral=True
-            # )
             print(f"status code: {r.status_code}\n{data}")
             write_event_to_db(
                 driver=str(interaction.guild.id),
@@ -118,18 +115,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                     )
                     post_data["acceptors"] = [interaction.user]
 
-                    # url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{job_id}"
-                    # pl = {"acceptor_status": "doing"}
-                    # update_status_req = requests.put(url=url, json=pl, headers=headers)
-                    # update_status_data = update_status_req.json()
-                    # if update_status_req.status_code == 200:
-                    #     print(
-                    #         f"status code: {update_status_req.status_code}\n{update_status_data}"
-                    #     )
-                    # else:
-                    #     print(
-                    #         f"status code: {update_status_req.status_code}\n{update_status_data}"
-                    #     )
                 else:
                     print(
                         f"status code: {self_accept_req.status_code}\n{self_accept_data}"
@@ -212,7 +197,9 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             pass
         if data["deadline"]:
             deadline = datetime.strptime(data["deadline"], "%Y-%m-%dT%H:%M:%S")
-            body = body + "⌛ **Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+            body = (
+                body + "⌛ **Deadline:** " + deadline.strftime("%Y-%m-%d  %H:%M") + "\n"
+            )
         else:
             # body = body + "**Deadline:** " + "-" + "\n"
             pass
