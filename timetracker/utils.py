@@ -24,8 +24,8 @@ def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: st
             id SERIAL NOT NULL PRIMARY KEY,
             guild_id BIGINT NOT NULL,
             discord_id BIGINT NOT NULL,
-            start BIGINT NOT NULL,
-            end BIGINT NULL,
+            start_epoch BIGINT NOT NULL,
+            end_epoch BIGINT NULL,
             duration INT NULL,
             is_job BOOLEAN DEFAULT TRUE,
             job_id INT NULL,
@@ -38,7 +38,7 @@ def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: st
 
     if isjob:
         cur.execute(
-            """INSERT INTO job_event (guild_id, discord_id, start, is_job, job_id, title)
+            """INSERT INTO job_event (guild_id, discord_id, start_epoch, is_job, job_id, title)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id
             ;""",
@@ -46,7 +46,7 @@ def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: st
         )
     else:
         cur.execute(
-            """INSERT INTO job_event (guild_id, discord_id, start, is_job, brief_id, title)
+            """INSERT INTO job_event (guild_id, discord_id, start_epoch, is_job, brief_id, title)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id
             ;""",
@@ -90,6 +90,8 @@ def find_pending(guild_id: int, discord_id: int):
                    AND discord_id = {discord_id};"""
     )
     result = cursor.fetchone()
+    if result is None:
+        raise Exception("No Pending!")
     cursor.execute(
         f"""DELETE FROM job_pendings
                    WHERE guild_id = {guild_id}
@@ -102,6 +104,9 @@ def find_pending(guild_id: int, discord_id: int):
 
 
 # guild_id, discord_id, isjob, id(job or brief), title
+# TO-DO
+# check for pendings first
+# if there is a pending, call end!
 def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
     title_255 = title[:255]
     event_id = record_event(
@@ -124,10 +129,13 @@ def end(guild_id: int, discord_id: int):
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM job_event WHERE id = {event_id}")
         db_event = cur.fetchone()
+        if db_event is None:
+            raise Exception("Could not find the event!")
+        
         start_epoch = db_event[3]
         duration = end_epoch - start_epoch
         cur.execute(
-            "UPDATE job_event SET end = %s, duration = %s WHERE id = %s;",
+            "UPDATE job_event SET end_epoch = %s, duration = %s WHERE id = %s;",
             (end_epoch, duration, event_id),
         )
         conn.commit()
