@@ -101,14 +101,41 @@ def find_pending(guild_id: int, discord_id: int):
     return result[2]
 
 
-# start
 # guild_id, discord_id, isjob, id(job or brief), title
+def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
+    title_255 = title[:255]
+    event_id = record_event(
+        guild_id=guild_id, discord_id=discord_id, isjob=isjob, id=id, title=title_255
+    )
+    record_pending(guild_id=guild_id, discord_id=discord_id, event_id=event_id)
 
-# end
-# guild_id, discord_id
-# who is pending what
-# find row in events, calculate duration for it
-# handle errors
+
+def end(guild_id: int, discord_id: int):
+    end_epoch = rightnow()
+    try:
+        event_id = find_pending(guild_id=guild_id, discord_id=discord_id)
+        conn = psycopg2.connect(
+            host="localhost",
+            dbname="postgres",
+            user="postgres",
+            password="Tp\ZS?gfLr|]'a",
+            port=5432,
+        )
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM job_event WHERE id = {event_id}")
+        db_event = cur.fetchone()
+        start_epoch = db_event[3]
+        duration = end_epoch - start_epoch
+        cur.execute(
+            "UPDATE job_event SET end = %s, duration = %s WHERE id = %s;",
+            (end_epoch, duration, event_id),
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return True
+    except Exception as e:
+        return e
 
 
 # make report
