@@ -275,3 +275,27 @@ def is_idle(guild, member):
         return True
     else:
         return False
+
+
+def whatsup(guild, member):
+    # b_and_id = briefing.get_last_brief_and_id(driver=str(guild.id), doer=str(member))
+    b_and_id = briefing.get_last_brief_and_id(driver=guild, doer=member)
+    last_brief = b_and_id[1]
+    b_id = b_and_id[0]
+    if b_and_id == "N/A":
+        raise Exception("user has no brief!")
+    result = {}
+
+    last_brief = last_brief.split("   id:")
+    if len(last_brief) == 2:
+        # this means that last_brief has an id at the end
+        # which means it was created by a job
+        result["isjob"] = True
+        result["id"] = int(last_brief[1])
+        result["title"] = last_brief[0]
+    else:
+        result["isjob"] = False
+        result["id"] = b_id
+        result["title"] = last_brief[0]
+
+    return result
