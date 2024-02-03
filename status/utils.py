@@ -45,7 +45,12 @@ async def gen_status_text(guild):
                 b = b[:51]  # only show first 51 charachters
                 b = b + "..."
             text = (
-                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n\n"
+                text
+                + ":green_circle:   "
+                + i.mention
+                + f"  --->    {b}"
+                + link
+                + "\n\n"
             )
         else:
             text = text + ":yellow_circle:  " + i.mention + "\n\n"
@@ -177,7 +182,12 @@ async def update_status_text(guild):
                 b = b[:51]  # only show first 51 charachters
                 b = b + "..."
             text = (
-                text + ":green_circle:   " + i.mention + f"  --->    {b}" + link + "\n\n"
+                text
+                + ":green_circle:   "
+                + i.mention
+                + f"  --->    {b}"
+                + link
+                + "\n\n"
             )
         else:
             if i not in idles:
@@ -257,3 +267,11 @@ def get_idles(guild):
             m = guild.get_member(each[0])
             members.append(m)
         return members
+
+
+def is_idle(guild, member):
+    idles_list = get_idles(guild)
+    if member.id in idles_list:
+        return True
+    else:
+        return False
