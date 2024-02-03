@@ -12,6 +12,9 @@ from briefing import briefing
 from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
+from status.utils import is_idle, whatsup
+from timetracker.utils import end as record_end
+from timetracker.utils import start as record_start
 from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
 from views.threebutton import ThreeButtonView
@@ -208,6 +211,12 @@ def run():
 
             # updating job status
             await status.update_status_text(guild)
+            # if user is not idle, and leaves, then we should record an end in 'job time tracker'
+            if not is_idle(guild=guild, member=member):
+                try:
+                    record_end(guild_id=guild.id, discord_id=member.id)
+                except Exception as e:
+                    print(e)
 
         # ASKING FOR BRIEF
         global last_brief_ask
@@ -239,6 +248,24 @@ def run():
 
             # updating job status
             await status.update_status_text(guild)
+
+            # if user enters, and is not idle, we should record a start in 'job time tracker'
+            if not is_idle(guild=guild, member=member):
+                # we should check if she has a brief AKA should_record_brief() is False
+                if not briefing.should_record_brief(
+                    driver=str(guild.id), doer=str(member)
+                ):
+                    try:
+                        wu = whatsup(guild=guild, member=member)
+                        record_start(
+                            guild_id=guild.id,
+                            discord_id=member.id,
+                            isjob=wu["isjob"],
+                            id=wu["id"],
+                            title=wu["title"],
+                        )
+                    except Exception as e:
+                        print(e)
 
     @bot.tree.command(
         description="Create a new Job Request, so others can accept it and do it for you!"
