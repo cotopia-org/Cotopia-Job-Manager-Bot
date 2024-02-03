@@ -271,7 +271,7 @@ def get_idles(guild):
 
 def is_idle(guild, member):
     idles_list = get_idles(guild)
-    if member.id in idles_list:
+    if member in idles_list:
         return True
     else:
         return False
