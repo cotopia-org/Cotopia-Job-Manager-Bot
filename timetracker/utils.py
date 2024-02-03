@@ -104,15 +104,46 @@ def find_pending(guild_id: int, discord_id: int):
 
 
 # guild_id, discord_id, isjob, id(job or brief), title
-# TO-DO
-# check for pendings first
-# if there is a pending, call end!
 def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
-    title_255 = title[:255]
-    event_id = record_event(
-        guild_id=guild_id, discord_id=discord_id, isjob=isjob, id=id, title=title_255
-    )
-    record_pending(guild_id=guild_id, discord_id=discord_id, event_id=event_id)
+    try: # check for pending
+        event_id = find_pending(guild_id=guild_id, discord_id=discord_id)
+        # if no Exception, continue to "end" that pending. then call start again!
+        print("WOW, an unexpected pending found!")
+        end_epoch = rightnow()
+        conn = psycopg2.connect(
+            host="localhost",
+            dbname="postgres",
+            user="postgres",
+            password="Tp\ZS?gfLr|]'a",
+            port=5432,
+        )
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM job_event WHERE id = {event_id}")
+        db_event = cur.fetchone()
+        if db_event is None:
+            raise Exception("Could not find the event!")
+        
+        start_epoch = db_event[3]
+        duration = end_epoch - start_epoch
+        cur.execute(
+            "UPDATE job_event SET end_epoch = %s, duration = %s WHERE id = %s;",
+            (end_epoch, duration, event_id),
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("Don't worry. I ended the pending event successfully.")
+
+        print("Now I try to call the start() again.")
+        start(guild_id, discord_id, isjob, id, title)
+
+    except Exception as e:
+        print(e)
+        title_255 = title[:255]
+        event_id = record_event(
+            guild_id=guild_id, discord_id=discord_id, isjob=isjob, id=id, title=title_255
+        )
+        record_pending(guild_id=guild_id, discord_id=discord_id, event_id=event_id)
 
 
 def end(guild_id: int, discord_id: int):
@@ -143,6 +174,7 @@ def end(guild_id: int, discord_id: int):
         conn.close()
         return True
     except Exception as e:
+        print(e)
         return e
 
 
