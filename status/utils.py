@@ -278,8 +278,7 @@ def is_idle(guild, member):
 
 
 def whatsup(guild, member):
-    # b_and_id = briefing.get_last_brief_and_id(driver=str(guild.id), doer=str(member))
-    b_and_id = briefing.get_last_brief_and_id(driver=guild, doer=member)
+    b_and_id = briefing.get_last_brief_and_id(driver=str(guild.id), doer=str(member))
     last_brief = b_and_id[1]
     b_id = b_and_id[0]
     if b_and_id == "N/A":
