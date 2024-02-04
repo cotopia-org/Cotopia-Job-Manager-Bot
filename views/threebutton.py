@@ -7,6 +7,8 @@ from persiantools.jdatetime import JalaliDate
 from bot_auth import create_token
 from briefing import briefing
 from status import utils as status
+from timetracker.utils import end as record_end
+from timetracker.utils import start as record_start
 from utils.event_recorder import write_event_to_db
 from views.ask_brief import AskBriefView
 
@@ -73,6 +75,31 @@ class ThreeButtonView(discord.ui.View):
             )
             await status.update_status_text(interaction.guild)
 
+            # user just started a task
+            # we should check the voice state
+            # if ok
+            # record start
+            if interaction.user.voice is not None:
+                if (
+                    interaction.user.voice.channel is not None
+                    and interaction.user.voice.self_deaf is False
+                ):
+                    print("IN A VOICE CHANNEL AND NOT DEAFENED")
+                    # no need to check idle
+                    try:
+                        wu = status.whatsup(
+                            guild=interaction.guild, member=interaction.user
+                        )
+                        record_start(
+                            guild_id=interaction.guild.id,
+                            discord_id=interaction.user.id,
+                            isjob=wu["isjob"],
+                            id=wu["id"],
+                            title=wu["title"],
+                        )
+                    except Exception as e:
+                        print(e)
+
         else:
             await interaction.response.send_message(
                 "You are not the addressee!", ephemeral=True
@@ -120,6 +147,15 @@ class ThreeButtonView(discord.ui.View):
                     guild_id=interaction.guild.id, member_id=interaction.user.id
                 )
                 await status.update_status_text(guild=interaction.guild)
+
+                # user becomes idle
+                # sending end to timetracker
+                try:
+                    record_end(
+                        guild_id=interaction.guild.id, discord_id=interaction.user.id
+                    )
+                except Exception as e:
+                    print(e)
 
                 # ask again what she's gonna do
                 ask_view = AskBriefView()
@@ -186,6 +222,15 @@ class ThreeButtonView(discord.ui.View):
                     guild_id=interaction.guild.id, member_id=interaction.user.id
                 )
                 await status.update_status_text(guild=interaction.guild)
+
+                # user becomes idle
+                # sending end to timetracker
+                try:
+                    record_end(
+                        guild_id=interaction.guild.id, discord_id=interaction.user.id
+                    )
+                except Exception as e:
+                    print(e)
 
                 # ask again what she's gonna do
                 ask_view = AskBriefView()
