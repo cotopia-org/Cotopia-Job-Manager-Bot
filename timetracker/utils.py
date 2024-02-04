@@ -10,6 +10,52 @@ def rightnow():
     return epoch
 
 
+def create_tables():
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
+    cur = conn.cursor()
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS job_event(
+            id SERIAL NOT NULL PRIMARY KEY,
+            guild_id BIGINT NOT NULL,
+            discord_id BIGINT NOT NULL,
+            start_epoch BIGINT NOT NULL,
+            end_epoch BIGINT NULL,
+            duration INT NULL,
+            is_job BOOLEAN DEFAULT TRUE,
+            job_id INT NULL,
+            brief_id INT NULL,
+            title VARCHAR(255) NULL)
+            ;"""
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    print("job_event created! @postgres")
+
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS job_pendings(
+                                guild_id INT NOT NULL,
+                                discord_id INT NOT NULL,
+                                event_id INT NOT NULL,
+                                UNIQUE(guild_id, discord_id)
+                                ); """
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    print("job_pendings created! @jobs.db")
+
+
 def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
     conn = psycopg2.connect(
         host="localhost",
@@ -105,7 +151,7 @@ def find_pending(guild_id: int, discord_id: int):
 
 # guild_id, discord_id, isjob, id(job or brief), title
 def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
-    try: # check for pending
+    try:  # check for pending
         event_id = find_pending(guild_id=guild_id, discord_id=discord_id)
         # if no Exception, continue to "end" that pending. then call start again!
         print("WOW, an unexpected pending found!")
@@ -122,7 +168,7 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
         db_event = cur.fetchone()
         if db_event is None:
             raise Exception("Could not find the event!")
-        
+
         start_epoch = db_event[3]
         duration = end_epoch - start_epoch
         cur.execute(
@@ -141,7 +187,11 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
         print(e)
         title_255 = title[:255]
         event_id = record_event(
-            guild_id=guild_id, discord_id=discord_id, isjob=isjob, id=id, title=title_255
+            guild_id=guild_id,
+            discord_id=discord_id,
+            isjob=isjob,
+            id=id,
+            title=title_255,
         )
         record_pending(guild_id=guild_id, discord_id=discord_id, event_id=event_id)
 
@@ -162,7 +212,7 @@ def end(guild_id: int, discord_id: int):
         db_event = cur.fetchone()
         if db_event is None:
             raise Exception("Could not find the event!")
-        
+
         start_epoch = db_event[3]
         duration = end_epoch - start_epoch
         cur.execute(
