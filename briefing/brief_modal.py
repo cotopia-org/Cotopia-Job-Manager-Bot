@@ -4,6 +4,7 @@ import discord
 from persiantools.jdatetime import JalaliDate
 
 from status import utils as status
+from timetracker.utils import start as record_start
 
 from . import briefing
 
@@ -47,6 +48,31 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
         # updating job status
         status.remove_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
         await status.update_status_text(interaction.guild)
+
+        # user just added a brief
+        # we should check the voice state
+        # if ok
+        # record start
+        if interaction.user.voice is not None:
+            if (
+                interaction.user.voice.channel is not None
+                and interaction.user.voice.self_deaf is False
+            ):
+                print("IN A VOICE CHANNEL AND NOT DEAFENED")
+                # no need to check idle
+                try:
+                    wu = status.whatsup(
+                        guild=interaction.guild, member=interaction.user
+                    )
+                    record_start(
+                        guild_id=interaction.guild.id,
+                        discord_id=interaction.user.id,
+                        isjob=wu["isjob"],
+                        id=wu["id"],
+                        title=wu["title"],
+                    )
+                except Exception as e:
+                    print(e)
 
         await interaction.response.send_message(
             f"Your brief was submitted {self.user.mention}!", ephemeral=True
