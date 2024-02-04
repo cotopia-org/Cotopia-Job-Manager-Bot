@@ -12,6 +12,7 @@ from briefing import briefing
 from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
+from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
 from views.threebutton import ThreeButtonView
@@ -117,6 +118,8 @@ def run():
             return
 
         guild = member.guild
+
+        event_checker(guild=guild, member=member, before=before, after=after)
 
         # func that asks for brief after a while
         task2 = None
