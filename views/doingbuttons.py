@@ -2,6 +2,7 @@ import discord
 import requests
 
 from status import utils as status
+from timetracker.utils import end as record_end
 from utils.event_recorder import write_event_to_db
 
 
@@ -33,6 +34,16 @@ class DoingButtons(discord.ui.View):
                 guild_id=interaction.guild.id, member_id=interaction.user.id
             )
             await status.update_status_text(guild=interaction.guild)
+
+            # user becomes idle
+            # sending end to timetracker
+            try:
+                record_end(
+                    guild_id=interaction.guild.id, discord_id=interaction.user.id
+                )
+            except Exception as e:
+                print(e)
+        
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(
@@ -61,6 +72,16 @@ class DoingButtons(discord.ui.View):
                 guild_id=interaction.guild.id, member_id=interaction.user.id
             )
             await status.update_status_text(guild=interaction.guild)
+
+            # user becomes idle
+            # sending end to timetracker
+            try:
+                record_end(
+                    guild_id=interaction.guild.id, discord_id=interaction.user.id
+                )
+            except Exception as e:
+                print(e)
+        
         else:
             print(f"status code: {r.status_code}\n{data}")
             await interaction.response.send_message(
