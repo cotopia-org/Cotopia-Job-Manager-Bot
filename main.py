@@ -12,6 +12,8 @@ from briefing import briefing
 from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
+from status.utils import whatsup
+from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
@@ -54,6 +56,7 @@ def run():
     async def on_message(message):
         if message.author == bot.user:
             return
+
         # RECORDING BRIEF
         try:
             replied_to = await message.channel.fetch_message(
@@ -107,6 +110,31 @@ def run():
                             guild_id=message.guild.id, member_id=message.author.id
                         )
                         await status.update_status_text(message.guild)
+
+                        # user just added a brief
+                        # we should check the voice state
+                        # if ok
+                        # record start
+                        if message.author.voice is not None:
+                            if (
+                                message.author.voice.channel is not None
+                                and message.author.voice.self_deaf is False
+                            ):
+                                print("IN A VOICE CHANNEL AND NOT DEAFENED")
+                                # no need to check idle
+                                try:
+                                    wu = whatsup(
+                                        guild=message.guild, member=message.author
+                                    )
+                                    record_start(
+                                        guild_id=message.guild.id,
+                                        discord_id=message.author.id,
+                                        isjob=wu["isjob"],
+                                        id=wu["id"],
+                                        title=wu["title"],
+                                    )
+                                except Exception as e:
+                                    print(e)
 
         except:  # noqa: E722
             print("the message is not relevant!")
