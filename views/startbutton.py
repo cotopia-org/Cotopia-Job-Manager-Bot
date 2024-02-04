@@ -6,6 +6,7 @@ from persiantools.jdatetime import JalaliDate
 
 from briefing import briefing
 from status import utils as status
+from timetracker.utils import start as record_start
 from utils.event_recorder import write_event_to_db
 
 
@@ -87,6 +88,31 @@ class StartView(discord.ui.View):
                 guild_id=interaction.guild.id, member_id=interaction.user.id
             )
             await status.update_status_text(interaction.guild)
+
+            # user just started a task
+            # we should check the voice state
+            # if ok
+            # record start
+            if interaction.user.voice is not None:
+                if (
+                    interaction.user.voice.channel is not None
+                    and interaction.user.voice.self_deaf is False
+                ):
+                    print("IN A VOICE CHANNEL AND NOT DEAFENED")
+                    # no need to check idle
+                    try:
+                        wu = status.whatsup(
+                            guild=interaction.guild, member=interaction.user
+                        )
+                        record_start(
+                            guild_id=interaction.guild.id,
+                            discord_id=interaction.user.id,
+                            isjob=wu["isjob"],
+                            id=wu["id"],
+                            title=wu["title"],
+                        )
+                    except Exception as e:
+                        print(e)
 
         else:
             print(f"status code: {r.status_code}\n{data}")
