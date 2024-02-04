@@ -18,6 +18,8 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
         channel = interaction.guild.system_channel
         embed = discord.Embed(
             title="#brief", description=self.brief.value, color=discord.Color.blue()
@@ -74,6 +76,6 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                 except Exception as e:
                     print(e)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             f"Your brief was submitted {self.user.mention}!", ephemeral=True
         )
