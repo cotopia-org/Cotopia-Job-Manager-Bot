@@ -1,3 +1,5 @@
+import time
+
 from briefing import briefing
 from status.utils import is_idle, whatsup
 from timetracker.utils import end as record_end
@@ -5,6 +7,7 @@ from timetracker.utils import start as record_start
 
 
 def check(guild, member, before, after):
+    print(f"VOICE CHECKER {int(time.time())}")
     if before.channel is None:
         # USER JOINED VOICE
         print("USER JOINED VOICE")

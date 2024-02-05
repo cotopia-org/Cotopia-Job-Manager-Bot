@@ -147,7 +147,9 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
             id=id,
             title=title_255,
         )
+        print(f"START {rightnow()} --- {guild_id}, {discord_id}, {id}")
         record_pending(guild_id=guild_id, discord_id=discord_id, event_id=event_id)
+        print("record_pending")
 
 
 def end(guild_id: int, discord_id: int):
@@ -176,6 +178,7 @@ def end(guild_id: int, discord_id: int):
         conn.commit()
         cur.close()
         conn.close()
+        print(f"END {end_epoch} --- {guild_id}, {discord_id}, {event_id}")
         return True
     except Exception as e:
         print(e)
