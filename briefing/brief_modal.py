@@ -76,7 +76,8 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                         title=wu["title"],
                     )
                 except Exception as e:
-                    print(f"Exception at {int(time.time())}\n" + e)
+                    print(f"Exception at {int(time.time())}")
+                    print(e)
 
         await interaction.followup.send(
             f"Your brief was submitted {self.user.mention}!", ephemeral=True

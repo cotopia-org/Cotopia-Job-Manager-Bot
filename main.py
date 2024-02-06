@@ -103,7 +103,8 @@ def run():
                             ]
                             task.cancel()
                         except Exception as e:
-                            print(f"Exception at {rightnow()}\n" + e)
+                            print(f"Exception at {rightnow()}")
+                            print(e)
 
                         # updating job status
                         status.remove_idle(
@@ -134,11 +135,13 @@ def run():
                                         title=wu["title"],
                                     )
                                 except Exception as e:
-                                    print(f"Exception at {rightnow()}\n" + e)
+                                    print(f"Exception at {rightnow()}")
+                                    print(e)
 
         except Exception as e:
             print("the message is not relevant!")
-            print(f"Exception at {rightnow()}\n" + e)
+            print(f"Exception at {rightnow()}")
+            print(e)
 
     @bot.event
     async def on_voice_state_update(member, before, after):
@@ -236,7 +239,8 @@ def run():
                 ]
                 task.cancel()
             except Exception as e:
-                print(f"Exception at {rightnow()}\n" + e)
+                print(f"Exception at {rightnow()}")
+                print(e)
 
             # updating job status
             await status.update_status_text(guild)
