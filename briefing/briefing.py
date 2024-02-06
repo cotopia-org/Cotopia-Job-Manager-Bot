@@ -11,7 +11,7 @@ def should_record_brief(doer: str, driver: str):
     if last == -1:
         return True
     now = today()
-    print(f"last recorded brief for {doer}@{driver} was from {last}")
+    # print(f"last recorded brief for {doer}@{driver} was from {last}")
     if last == now:
         return False
     else:
@@ -40,7 +40,7 @@ def get_last_brief(doer: str, driver: str):
     result = cur.fetchone()
 
     if result is None:
-        print("no brief found!")
+        # print("no brief found!")
         conn.commit()
         cur.close()
         conn.close()
@@ -73,7 +73,7 @@ def get_last_brief_and_id(doer: str, driver: str):
     result = cur.fetchone()
 
     if result is None:
-        print("no brief found!")
+        # print("no brief found!")
         conn.commit()
         cur.close()
         conn.close()
@@ -107,7 +107,7 @@ def get_last_brief_epoch(doer: str, driver: str):
     result = cur.fetchone()
 
     if result is None:
-        print("no brief found!")
+        # print("no brief found!")
         conn.commit()
         cur.close()
         conn.close()
@@ -139,7 +139,7 @@ def write_to_db(brief: str, doer: str, driver: str):
         "INSERT INTO brief (driver, epoch, doer, content) VALUES (%s, %s, %s, %s);",
         (driver, rightnow(), doer, brief),
     )
-    print("trying to write a brief to db!")
+    # print("trying to write a brief to db!")
     conn.commit()
     cur.close()
     conn.close()
@@ -195,7 +195,7 @@ def get_last_brief_ts(doer: str, driver: str):
     result = cur.fetchone()
 
     if result is None:
-        print("no brief found!")
+        # print("no brief found!")
         conn.commit()
         cur.close()
         conn.close()
