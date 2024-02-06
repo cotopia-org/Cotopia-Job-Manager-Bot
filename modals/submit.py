@@ -181,6 +181,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         LINE = "\n-----------------------------------------------------\n"
 
         title = "## " + data["title"]
+        body = ""
 
         if data["description"]:
             body = "\n" + data["description"] + "\n"
