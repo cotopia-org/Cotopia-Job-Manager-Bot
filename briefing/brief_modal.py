@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import discord
 from persiantools.jdatetime import JalaliDate
@@ -44,8 +45,9 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                 if task.get_name() == f"ask for brief {str(self.user)}@{self.driver}"
             ]
             task.cancel()
-        except:  # noqa: E722
+        except Exception as e:
             print("No briefing tasks were canceled!")
+            print(e)
 
         # updating job status
         status.remove_idle(guild_id=interaction.guild.id, member_id=interaction.user.id)
@@ -74,7 +76,7 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                         title=wu["title"],
                     )
                 except Exception as e:
-                    print(e)
+                    print(f"Exception at {int(time.time())}\n" + e)
 
         await interaction.followup.send(
             f"Your brief was submitted {self.user.mention}!", ephemeral=True
