@@ -108,7 +108,7 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
     try:  # check for pending
         event_id = find_pending(guild_id=guild_id, discord_id=discord_id)
         # if no Exception, continue to "end" that pending. then call start again!
-        print("WOW, an unexpected pending found!")
+        print(f"WOW, an unexpected pending found!   @{int(time.time())}")
         end_epoch = rightnow()
         conn = psycopg2.connect(
             host="localhost",
@@ -132,7 +132,7 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
         conn.commit()
         cur.close()
         conn.close()
-        print("Don't worry. I ended the pending event successfully.")
+        print(f"Don't worry. I ended the pending event successfully.     @{int(time.time())}")
 
         print("Now I try to call the start() again.")
         start(guild_id, discord_id, isjob, id, title)
