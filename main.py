@@ -102,8 +102,8 @@ def run():
                                 == f"ask for brief {str(message.author)}@{message.guild.id}"
                             ]
                             task.cancel()
-                        except:  # noqa: E722
-                            print("Asking for brief was not canceled! Don't panic tho.")
+                        except Exception as e:
+                            print(f"Exception at {rightnow()}\n" + e)
 
                         # updating job status
                         status.remove_idle(
@@ -134,10 +134,11 @@ def run():
                                         title=wu["title"],
                                     )
                                 except Exception as e:
-                                    print(e)
+                                    print(f"Exception at {rightnow()}\n" + e)
 
-        except:  # noqa: E722
+        except Exception as e:
             print("the message is not relevant!")
+            print(f"Exception at {rightnow()}\n" + e)
 
     @bot.event
     async def on_voice_state_update(member, before, after):
@@ -172,7 +173,7 @@ def run():
             r = requests.get(url=url, headers=headers)
             data = r.json()
             status_code = r.status_code
-            print(f"status code: {status_code}\n{data}")
+            # print(f"status code: {status_code}\n{data}")
             if status_code == 200 and len(data) > 0:
                 task_index = len(data) - 1  # last one
                 task_title = data[task_index]["job"]["title"]
@@ -222,7 +223,7 @@ def run():
                     )
 
                 ask_view.ask_msg_id = ask_msg.id
-                print(f"the ask msg id is {ask_view.ask_msg_id}")
+                # print(f"the ask msg id is {ask_view.ask_msg_id}")
 
         # When user leaves voice channels
         if after.channel is None:
@@ -234,8 +235,8 @@ def run():
                     if task.get_name() == f"ask for brief {str(member)}@{guild.id}"
                 ]
                 task.cancel()
-            except:  # noqa: E722
-                print("Asking for brief was not canceled! Don't panic tho.")
+            except Exception as e:
+                print(f"Exception at {rightnow()}\n" + e)
 
             # updating job status
             await status.update_status_text(guild)
