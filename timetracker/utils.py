@@ -1,4 +1,3 @@
-import sqlite3
 import time
 
 import psycopg2
@@ -62,7 +61,13 @@ def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: st
 
 
 def record_pending(guild_id: int, discord_id: int, event_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_pendings(
@@ -73,8 +78,11 @@ def record_pending(guild_id: int, discord_id: int, event_id: int):
                                 ); """
     )
     cursor.execute(
-        f"""INSERT INTO job_pendings
-                   VALUES ({guild_id}, {discord_id}, {event_id});"""
+        """
+                INSERT INTO job_pendings
+                VALUES (%s, %s, %s)
+                ;""",
+        (guild_id, discord_id, event_id),
     )
     conn.commit()
     cursor.close()
@@ -82,7 +90,13 @@ def record_pending(guild_id: int, discord_id: int, event_id: int):
 
 
 def find_pending(guild_id: int, discord_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         f"""SELECT * FROM job_pendings
@@ -132,7 +146,9 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
         conn.commit()
         cur.close()
         conn.close()
-        print(f"Don't worry. I ended the pending event successfully.     @{int(time.time())}")
+        print(
+            f"Don't worry. I ended the pending event successfully.     @{int(time.time())}"
+        )
 
         print("Now I try to call the start() again.")
         start(guild_id, discord_id, isjob, id, title)
