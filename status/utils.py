@@ -1,6 +1,5 @@
-import sqlite3
-
 import discord
+import psycopg2
 
 from briefing import briefing
 from utils import job_posts
@@ -63,7 +62,9 @@ async def gen_status_text(guild):
         category = await guild.create_category("JOBS")
     da_channel = discord.utils.get(guild.text_channels, name="📊-status")
     if da_channel is None:
-        da_channel = await guild.create_text_channel(category=category, name="📊-status")
+        da_channel = await guild.create_text_channel(
+            category=category, name="📊-status"
+        )
 
     if text == "":
         text = "Nobody's here! 👻"
@@ -74,8 +75,14 @@ async def gen_status_text(guild):
 
     try:
         # Connect to DB and create a cursor
-        sqliteConnection = sqlite3.connect("jobs.db")
-        cursor = sqliteConnection.cursor()
+        dbConnection = psycopg2.connect(
+            host="localhost",
+            dbname="postgres",
+            user="postgres",
+            password="Tp\ZS?gfLr|]'a",
+            port=5432,
+        )
+        cursor = dbConnection.cursor()
         print("DB Init")
 
         # Creating table
@@ -94,31 +101,37 @@ async def gen_status_text(guild):
 
         # Deleting the row just in case
         cursor.execute(f"DELETE FROM status_txt WHERE guild_id = {guild.id};")
-        sqliteConnection.commit()
+        dbConnection.commit()
         # Inserting data
         msg_query = f"""     INSERT INTO status_txt VALUES
                                 ({guild.id}, {da_channel.id}, {da_msg.id});"""
 
         cursor.execute(msg_query)
-        sqliteConnection.commit()
+        dbConnection.commit()
 
         # Close the cursor
         cursor.close()
 
     # Handle errors
-    except sqlite3.Error as error:
+    except psycopg2.Error as error:
         print("Error occurred - ", error)
 
     # Close DB Connection irrespective of success
     # or failure
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
-            print("SQLite Connection closed")
+        if dbConnection:
+            dbConnection.close()
+            print("PostgreSQL Connection closed")
 
 
 def get_status_text(guild_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM status_txt WHERE guild_id = {guild_id};")
 
@@ -221,7 +234,13 @@ async def update_status_text(guild):
 
 
 def set_as_idle(guild_id, member_id):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS idles(
@@ -238,7 +257,13 @@ def set_as_idle(guild_id, member_id):
 
 
 def remove_idle(guild_id, member_id):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         f"DELETE FROM idles WHERE guild_id = {guild_id} AND member_id = {member_id};"
@@ -250,7 +275,13 @@ def remove_idle(guild_id, member_id):
 
 
 def get_idles(guild):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(f"SELECT member_id FROM idles WHERE guild_id = {guild.id}")
     result = cursor.fetchall()
