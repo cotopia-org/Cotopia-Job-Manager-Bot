@@ -29,8 +29,8 @@ def create_tables():
 
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_pendings(
-                                guild_id INT NOT NULL,
-                                discord_id INT NOT NULL,
+                                guild_id BIGINT NOT NULL,
+                                discord_id BIGINT NOT NULL,
                                 event_id INT NOT NULL,
                                 UNIQUE(guild_id, discord_id)
                                 ); """
@@ -40,25 +40,25 @@ def create_tables():
 
     cursor.execute(
             """CREATE TABLE IF NOT EXISTS idles(
-                                guild_id INT NOT NULL,
-                                member_id INT NOT NULL); """
+                                guild_id BIGINT NOT NULL,
+                                member_id BIGINT NOT NULL); """
     )
 
     print("idles created! @postgres")
 
     cursor.execute("""   CREATE TABLE IF NOT EXISTS status_txt(
-                                guild_id INT NOT NULL,
-                                channel_id INT NOT NULL,
-                                msg_id INT NOT NULL); """
+                                guild_id BIGINT NOT NULL,
+                                channel_id BIGINT NOT NULL,
+                                msg_id BIGINT NOT NULL); """
     )
 
     print("status_txt created! @postgres")
 
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_posts(
-                   guild_id INT NOT NULL,
-                   channel_id INT NOT NULL,
-                   post_id INT NOT NULL,
+                   guild_id BIGINT NOT NULL,
+                   channel_id BIGINT NOT NULL,
+                   post_id BIGINT NOT NULL,
                    job_id INT NOT NULL
                    );"""
     )
