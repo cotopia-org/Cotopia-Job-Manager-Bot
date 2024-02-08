@@ -1,8 +1,14 @@
-import sqlite3
+import psycopg2
 
 
 def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_posts(
@@ -24,7 +30,13 @@ def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
 
 
 def get_job_id(post_id: int, channel_id: int, guild_id: int):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         f"""SELECT job_id FROM job_posts 
@@ -44,7 +56,13 @@ def get_job_id(post_id: int, channel_id: int, guild_id: int):
 
 
 async def get_job_link(job_id: int, guild):
-    conn = sqlite3.connect("jobs.db")
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
     cursor = conn.cursor()
     cursor.execute(
         f"SELECT * FROM job_posts WHERE guild_id = {guild.id} AND job_id = {job_id};"
@@ -63,4 +81,3 @@ async def get_job_link(job_id: int, guild):
             return msg.jump_url
         except:  # noqa: E722
             return None
-
