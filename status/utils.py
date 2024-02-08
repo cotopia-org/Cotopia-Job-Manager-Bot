@@ -87,16 +87,16 @@ async def gen_status_text(guild):
 
         # Creating table
         table_query = """   CREATE TABLE IF NOT EXISTS status_txt(
-                                guild_id INT NOT NULL,
-                                channel_id INT NOT NULL,
-                                msg_id INT NOT NULL); """
+                                guild_id BIGINT NOT NULL,
+                                channel_id BIGINT NOT NULL,
+                                msg_id BIGINT NOT NULL); """
 
         cursor.execute(table_query)
 
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS idles(
-                                guild_id INT NOT NULL,
-                                member_id INT NOT NULL); """
+                                guild_id BIGINT NOT NULL,
+                                member_id BIGINT NOT NULL); """
         )
 
         # Deleting the row just in case
@@ -244,8 +244,8 @@ def set_as_idle(guild_id, member_id):
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS idles(
-                                guild_id INT NOT NULL,
-                                member_id INT NOT NULL,
+                                guild_id BIGINT NOT NULL,
+                                member_id BIGINT NOT NULL,
                                 UNIQUE(guild_id, member_id)
                                 ); """
     )

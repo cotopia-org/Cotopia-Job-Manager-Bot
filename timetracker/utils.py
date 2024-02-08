@@ -71,8 +71,8 @@ def record_pending(guild_id: int, discord_id: int, event_id: int):
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_pendings(
-                                guild_id INT NOT NULL,
-                                discord_id INT NOT NULL,
+                                guild_id BIGINT NOT NULL,
+                                discord_id BIGINT NOT NULL,
                                 event_id INT NOT NULL,
                                 UNIQUE(guild_id, discord_id)
                                 ); """

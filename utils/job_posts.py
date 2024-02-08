@@ -12,9 +12,9 @@ def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
     cursor = conn.cursor()
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS job_posts(
-                   guild_id INT NOT NULL,
-                   channel_id INT NOT NULL,
-                   post_id INT NOT NULL,
+                   guild_id BIGINT NOT NULL,
+                   channel_id BIGINT NOT NULL,
+                   post_id BIGINT NOT NULL,
                    job_id INT NOT NULL
                    );"""
     )
