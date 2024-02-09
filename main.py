@@ -104,6 +104,7 @@ def run():
                             task.cancel()
                         except Exception as e:
                             print(f"Exception at {rightnow()}")
+                            print("main.py line 107")
                             print(e)
 
                         # updating job status
@@ -136,11 +137,13 @@ def run():
                                     )
                                 except Exception as e:
                                     print(f"Exception at {rightnow()}")
+                                    print("main.py line 140")
                                     print(e)
 
         except Exception as e:
             print("the message is not relevant!")
             print(f"Exception at {rightnow()}")
+            print("main.py line 146")
             print(e)
 
     @bot.event
@@ -240,6 +243,7 @@ def run():
                 task.cancel()
             except Exception as e:
                 print(f"Exception at {rightnow()}")
+                print("main.py line 246")
                 print(e)
 
             # updating job status

@@ -77,6 +77,7 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                     )
                 except Exception as e:
                     print(f"Exception at {int(time.time())}")
+                    print("brief_modal.py line 80")
                     print(e)
 
         await interaction.followup.send(
