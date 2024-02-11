@@ -65,9 +65,11 @@ def process_events(user_events: list):
 def seconds_to_hours(processed_events: dict):
     result = {}
     for each in processed_events:
-        if "duration" in each:
-            each["duration"] = round(each["duration"] / 3600, 1)
-        result.update(each)
+        if "duration" in processed_events[each]:
+            processed_events[each]["duration"] = round(
+                processed_events[each]["duration"] / 3600, 2
+            )
+        result.update({each: processed_events[each]})
     return result
 
 
