@@ -185,11 +185,72 @@ class TodoButtons(discord.ui.View):
                 f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
-    # @discord.ui.button(label="Decline", style=discord.ButtonStyle.secondary)
-    # async def decline(
-    #     self, interaction: discord.Interaction, button: discord.ui.Button
-    # ):
-    #     pass
+    @discord.ui.button(label="❌ Decline", style=discord.ButtonStyle.secondary)
+    async def decline(
+        self, interaction: discord.Interaction, button: discord.ui.Button
+    ):
+        await interaction.response.defer()
+        url = f"https://jobs-api.cotopia.social/bot/jobs/decline/{self.job_id}"
+        r = requests.delete(url=url, headers=self.headers)
+        try:
+            data = r.json()
+        except:  # noqa: E722
+            data = r.text
+        if r.status_code == 204:
+            # TO_DO
+            # edit the job post and remove user in acceptors
+            print(f"status code: {r.status_code}\n{data}")
+            write_event_to_db(
+                driver=str(interaction.guild.id),
+                kind="TASK DECLINED",
+                doer=str(interaction.user.id),
+                isPair=False,
+            )
+            # sending request to get todos
+            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            r = requests.get(url=url, headers=self.headers)
+            data = r.json()
+            status_code = r.status_code
+            # request is ok
+            if status_code == 200:
+                # todo list is not empty
+                if len(data) > 0:
+                    # making a drop down menu
+                    rows = []
+                    for each in data:
+                        rows.append(
+                            discord.SelectOption(
+                                label=each["job"]["title"],
+                                value=each["job"]["id"],
+                            )
+                        )
+
+                    todo_view = TodoView(
+                        options=rows,
+                        placeholder="Select a TO-DO!",
+                        ask_msg_id=0,
+                    )
+                    await interaction.followup.edit_message(
+                        message_id=interaction.message.id,
+                        content="Task declined!\nSelect the task that you want to work on:",
+                        view=todo_view,
+                    )
+                # todo list is empty
+                else:
+                    await interaction.followup.edit_message(
+                        message_id=interaction.message.id,
+                        content="Task declined!\nYour TO-DO list is empty! 🥳"
+                    )
+            # request error
+            else:
+                await interaction.followup.send(
+                    f"ERROR {status_code}\n{data}", ephemeral=True
+                )
+        else:
+            print(f"status code: {r.status_code}\n{data}")
+            await interaction.response.send_message(
+                f"status code: {r.status_code}\n{data}", ephemeral=True
+            )
 
 
 class TodoDropDown(discord.ui.Select):
