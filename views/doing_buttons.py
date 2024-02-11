@@ -14,6 +14,7 @@ class DoingButtons(discord.ui.View):
 
     @discord.ui.button(label="✅ Done", style=discord.ButtonStyle.secondary)
     async def done(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
@@ -26,8 +27,11 @@ class DoingButtons(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.edit_message(
-                content="Task moved to DONE!", view=None, delete_after=60
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id,
+                content="Task moved to DONE!",
+                view=None,
+                delete_after=60,
             )
             # updating job status
             status.set_as_idle(
@@ -43,15 +47,16 @@ class DoingButtons(discord.ui.View):
                 )
             except Exception as e:
                 print(e)
-        
+
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
     @discord.ui.button(label="⏸️ Pause", style=discord.ButtonStyle.secondary)
     async def todo(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "todo"}
         r = requests.put(url=url, json=pl, headers=self.headers)
@@ -64,8 +69,11 @@ class DoingButtons(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.edit_message(
-                content="Task moved to TODO!", view=None, delete_after=60
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id,
+                content="Task moved to TODO!",
+                view=None,
+                delete_after=60,
             )
             # updating job status
             status.set_as_idle(
@@ -81,9 +89,9 @@ class DoingButtons(discord.ui.View):
                 )
             except Exception as e:
                 print(e)
-        
+
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
