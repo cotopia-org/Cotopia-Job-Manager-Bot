@@ -20,7 +20,7 @@ from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView, TodoView
 from views.doingbuttons import DoingButtons
-from views.threebutton import ThreeButtonView
+from views.followup_buttons import FollowupButtonsView
 
 logger = settings.logging.getLogger("bot")
 
@@ -193,7 +193,7 @@ def run():
             if status_code == 200 and len(data) > 0:
                 task_index = len(data) - 1  # last one
                 task_title = data[task_index]["job"]["title"]
-                follow_up_view = ThreeButtonView()
+                follow_up_view = FollowupButtonsView()
                 follow_up_view.addressee = member
                 follow_up_view.job_id = data[task_index]["job"]["id"]
                 follow_up_view.job_title = task_title
