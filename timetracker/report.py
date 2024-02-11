@@ -62,6 +62,15 @@ def process_events(user_events: list):
     return result
 
 
+def seconds_to_hours(processed_events: dict):
+    result = {}
+    for each in processed_events:
+        if "duration" in each:
+            each["duration"] = round(each["duration"] / 3600, 1)
+        result.update(each)
+    return result
+
+
 def gen_user_report(guild_id: int, discord_id: int, start_epoch: int, end_epoch: int):
     user_events = get_user_events(
         guild_id=guild_id,
@@ -73,6 +82,7 @@ def gen_user_report(guild_id: int, discord_id: int, start_epoch: int, end_epoch:
     if the_dict is False:
         return {200: "No Events Found!"}
     else:
+        the_dict = seconds_to_hours(the_dict)
         the_dict["time"] = {"From": start_epoch, "To": end_epoch}
         the_dict["user"] = {"guild_id": guild_id, "discord_id": discord_id}
         return the_dict
