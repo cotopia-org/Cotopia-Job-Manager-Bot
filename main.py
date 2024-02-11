@@ -19,7 +19,7 @@ from timetracker.report import gen_user_report
 from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView, TodoView
-from views.doingbuttons import DoingButtons
+from views.doing_buttons import DoingButtons
 from views.followup_buttons import FollowupButtonsView
 
 logger = settings.logging.getLogger("bot")
