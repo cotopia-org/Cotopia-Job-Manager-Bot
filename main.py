@@ -459,13 +459,13 @@ def run():
         await interaction.response.send_modal(brief_modal)
 
     @bot.hybrid_command()
-    async def report(ctx):
+    async def report(ctx, member: discord.Member):
         now = today_jalali()
         start_epoch = int(
             JalaliDateTime(
                 year=now["y"],
                 month=now["m"],
-                day=1,
+                day=20,
                 hour=0,
                 minute=0,
                 second=0,
@@ -490,7 +490,7 @@ def run():
 
         report = gen_user_report(
             guild_id=ctx.guild.id,
-            discord_id=ctx.author.id,
+            discord_id=member.id,
             start_epoch=start_epoch,
             end_epoch=end_epoch,
         )
