@@ -1,10 +1,12 @@
 import asyncio
+import pprint
 import time
 
 import discord
+import pytz
 import requests
 from discord.ext import commands
-from persiantools.jdatetime import JalaliDate
+from persiantools.jdatetime import JalaliDate, JalaliDateTime
 
 import settings
 from bot_auth import create_token
@@ -13,6 +15,7 @@ from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
 from status.utils import whatsup
+from timetracker.report import gen_user_report
 from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView, TodoView
@@ -28,6 +31,13 @@ last_brief_ask = {}
 def rightnow():
     epoch = int(time.time())
     return epoch
+
+
+def today_jalali():
+    the_string = str(JalaliDate.today())
+    slices = the_string.split("-")
+    dic = {"y": int(slices[0]), "m": int(slices[1]), "d": int(slices[2])}
+    return dic
 
 
 def run():
@@ -447,6 +457,45 @@ def run():
         brief_modal.user = interaction.user
         brief_modal.driver = interaction.guild_id
         await interaction.response.send_modal(brief_modal)
+
+    @bot.hybrid_command()
+    async def report(ctx):
+        now = today_jalali()
+        start_epoch = int(
+            JalaliDateTime(
+                year=now["y"],
+                month=now["m"],
+                day=1,
+                hour=0,
+                minute=0,
+                second=0,
+                tzinfo=pytz.timezone("Asia/Tehran"),
+            )
+            .to_gregorian()
+            .strftime("%s")
+        )
+        end_epoch = int(
+            JalaliDateTime(
+                year=now["y"],
+                month=now["m"],
+                day=now["d"],
+                hour=23,
+                minute=59,
+                second=59,
+                tzinfo=pytz.timezone("Asia/Tehran"),
+            )
+            .to_gregorian()
+            .strftime("%s")
+        )
+
+        report = gen_user_report(
+            guild_id=ctx.guild.id,
+            discord_id=ctx.author.id,
+            start_epoch=start_epoch,
+            end_epoch=end_epoch,
+        )
+
+        await ctx.send(pprint.pformat(report), ephemeral=True)
 
     # @bot.hybrid_command()
     # async def token(ctx):
