@@ -33,7 +33,6 @@ def process_events(user_events: list):
     if len(user_events) == 0:
         return False
     result = {}
-    result["user"] = {"guild_id": user_events[0][1], "discord_id": user_events[0][2]}
     for each in user_events:
         if each[6]:
             key = f"job-{each[7]}"
@@ -75,4 +74,5 @@ def gen_user_report(guild_id: int, discord_id: int, start_epoch: int, end_epoch:
         return {200: "No Events Found!"}
     else:
         the_dict["time"] = {"From": start_epoch, "To": end_epoch}
+        the_dict["user"] = {"guild_id": guild_id, "discord_id": discord_id}
         return the_dict
