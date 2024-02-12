@@ -25,7 +25,7 @@ class FollowupButtonsView(discord.ui.View):
     @discord.ui.button(label="Yes!", style=discord.ButtonStyle.primary)
     async def yes(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.addressee == interaction.user:
-            interaction.response.defer()
+            await interaction.response.defer()
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
                 doer=str(interaction.user),
@@ -111,7 +111,7 @@ class FollowupButtonsView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
-            interaction.response.defer()
+            await interaction.response.defer()
             # make token and headers
             d = {}
             d["discord_guild"] = interaction.guild_id
@@ -187,7 +187,7 @@ class FollowupButtonsView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
-            interaction.response.defer()
+            await interaction.response.defer()
             # make token and headers
             d = {}
             d["discord_guild"] = interaction.guild_id
