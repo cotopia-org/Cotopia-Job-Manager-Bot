@@ -12,6 +12,7 @@ class SubmittedJobView(discord.ui.View):
 
     @discord.ui.button(label="🤝 Accept", style=discord.ButtonStyle.secondary)
     async def accept(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
         users_info = {}
         users_info["discord_guild"] = interaction.guild_id
         users_info["discord_id"] = interaction.user.id
@@ -53,8 +54,10 @@ class SubmittedJobView(discord.ui.View):
                 new_text = (
                     new_text + "**Accepted By:**" + s[1] + ", " + str(interaction.user)
                 )
-            await interaction.response.edit_message(content=new_text)
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id, content=new_text
+            )
         else:
-            await interaction.response.send_message(
-                f"status code: {status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {status_code}\n{data}", ephemeral=True
             )
