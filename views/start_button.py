@@ -2,7 +2,6 @@ import asyncio
 
 import discord
 import requests
-from persiantools.jdatetime import JalaliDate
 
 from briefing import briefing
 from status import utils as status

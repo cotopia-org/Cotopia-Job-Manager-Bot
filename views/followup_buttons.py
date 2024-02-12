@@ -2,7 +2,6 @@ import asyncio
 
 import discord
 import requests
-from persiantools.jdatetime import JalaliDate
 
 from bot_auth import create_token
 from briefing import briefing

@@ -2,7 +2,6 @@ import asyncio
 import time
 
 import discord
-from persiantools.jdatetime import JalaliDate
 
 from status import utils as status
 from timetracker.utils import start as record_start
@@ -23,7 +22,9 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
 
         channel = interaction.guild.system_channel
         embed = discord.Embed(
-            title="📣📣 Status Update", description=self.brief.value, color=discord.Color.blue()
+            title="📣📣 Status Update",
+            description=self.brief.value,
+            color=discord.Color.blue(),
         )
         # embed.set_author(name=str(JalaliDate.today()))
         briefing.write_to_db(

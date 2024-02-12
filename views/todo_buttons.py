@@ -5,7 +5,6 @@ from typing import List
 import discord
 import requests
 from discord.components import SelectOption
-from persiantools.jdatetime import JalaliDate
 
 from bot_auth import create_token
 from briefing import briefing
