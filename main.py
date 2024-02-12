@@ -83,7 +83,7 @@ def run():
                         )
                         em = discord.Embed(
                             title="📣",
-                            description=message.content,
+                            description="I'm working on\n**" + message.content + "**",
                             color=discord.Color.blue(),
                         )
                         # em.set_author(name=str(JalaliDate.today()))

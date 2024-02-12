@@ -46,7 +46,7 @@ class StartView(discord.ui.View):
             )
             em = discord.Embed(
                 title="📣",
-                description=self.job_title,
+                description="I'm working on\n**" + self.job_title + "**",
                 color=discord.Color.blue(),
             )
             # em.set_author(name=str(JalaliDate.today()))

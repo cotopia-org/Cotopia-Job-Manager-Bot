@@ -23,7 +23,7 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
         channel = interaction.guild.system_channel
         embed = discord.Embed(
             title="📣",
-            description=self.brief.value,
+            description="I'm working on\n**" + self.brief.value + "**",
             color=discord.Color.blue(),
         )
         # embed.set_author(name=str(JalaliDate.today()))
