@@ -45,7 +45,7 @@ class StartView(discord.ui.View):
                 driver=str(interaction.guild.id),
             )
             em = discord.Embed(
-                title="📣 Status Update",
+                title="📣",
                 description=self.job_title,
                 color=discord.Color.blue(),
             )

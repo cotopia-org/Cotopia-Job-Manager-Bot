@@ -22,7 +22,7 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
 
         channel = interaction.guild.system_channel
         embed = discord.Embed(
-            title="📣 Status Update",
+            title="📣",
             description=self.brief.value,
             color=discord.Color.blue(),
         )
