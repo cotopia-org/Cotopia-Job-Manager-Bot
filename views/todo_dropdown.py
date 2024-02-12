@@ -80,7 +80,7 @@ class TodoDropDown(discord.ui.Select):
         else:
             # body = "\n**Description:** " + "-" + "\n"
             pass
-        ws = data["workspace"].replace(guild.name + "/", "")
+        ws = data["workspace"].replace(str(guild.id) + "/", "")
         if len(ws) > 0:
             body = body + "📁 **Workspace:** " + ws + "\n"
         else:

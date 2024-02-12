@@ -72,7 +72,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         post_data = {}
         payload_dic = {}
         payload_dic["title"] = self.job_title.value
-        payload_dic["workspace"] = interaction.guild.name + "/" + self.workspace.value
+        payload_dic["workspace"] = str(interaction.guild.id) + "/" + self.workspace.value
         if self.description.value != "":
             payload_dic["description"] = self.description.value
         if self.tags.value != "":
@@ -188,7 +188,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         else:
             # body = "\n**Description:** " + "-" + "\n"
             pass
-        ws = data["workspace"].replace(guild.name + "/", "")
+        ws = data["workspace"].replace(str(guild.id) + "/", "")
         if len(ws) > 0:
             body = body + "📁 **Workspace:** " + ws + "\n"
         else:
