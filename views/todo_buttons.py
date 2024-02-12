@@ -11,6 +11,7 @@ from briefing import briefing
 from status import utils as status
 from timetracker.utils import start as record_start
 from utils.event_recorder import write_event_to_db
+from utils.job_posts import get_job_link
 
 
 class TodoButtons(discord.ui.View):
@@ -48,9 +49,17 @@ class TodoButtons(discord.ui.View):
                 doer=str(interaction.user),
                 driver=str(interaction.guild.id),
             )
+            try:
+                url = await get_job_link(job_id=self.job_id, guild=interaction.guild)
+                if url is None:
+                    link = ""
+                else:
+                    link = f"[view]({url})"
+            except:  # noqa: E722
+                link = ""
             em = discord.Embed(
                 title="📣",
-                description="I'm working on\n**" + self.job_title + "**",
+                description="I'm working on\n**" + self.job_title + "**\n" + link,
                 color=discord.Color.blue(),
             )
             # em.set_author(name=str(JalaliDate.today()))
