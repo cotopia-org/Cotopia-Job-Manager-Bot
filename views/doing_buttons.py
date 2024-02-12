@@ -31,7 +31,6 @@ class DoingButtons(discord.ui.View):
                 message_id=interaction.message.id,
                 content="Task moved to DONE!",
                 view=None,
-                delete_after=60,
             )
             # updating job status
             status.set_as_idle(
@@ -73,7 +72,6 @@ class DoingButtons(discord.ui.View):
                 message_id=interaction.message.id,
                 content="Task moved to TODO!",
                 view=None,
-                delete_after=60,
             )
             # updating job status
             status.set_as_idle(
