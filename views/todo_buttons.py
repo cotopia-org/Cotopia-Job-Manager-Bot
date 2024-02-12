@@ -26,6 +26,7 @@ class TodoButtons(discord.ui.View):
     async def startjob(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
+        await interaction.response.defer()
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
@@ -38,8 +39,10 @@ class TodoButtons(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.edit_message(
-                content="Task Status: Doing!", view=None, delete_after=60
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id,
+                content="Task Status: Doing!",
+                view=None,
             )
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
@@ -120,8 +123,8 @@ class TodoButtons(discord.ui.View):
 
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
     @discord.ui.button(label="✅ Done", style=discord.ButtonStyle.secondary)
@@ -172,7 +175,7 @@ class TodoButtons(discord.ui.View):
                 else:
                     await interaction.followup.edit_message(
                         message_id=interaction.message.id,
-                        content="Task moved to 'Done'!\nYour TO-DO list is empty! 🥳"
+                        content="Task moved to 'Done'!\nYour TO-DO list is empty! 🥳",
                     )
             # request error
             else:
@@ -181,8 +184,8 @@ class TodoButtons(discord.ui.View):
                 )
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
     @discord.ui.button(label="❌ Decline", style=discord.ButtonStyle.secondary)
@@ -239,7 +242,7 @@ class TodoButtons(discord.ui.View):
                 else:
                     await interaction.followup.edit_message(
                         message_id=interaction.message.id,
-                        content="Task declined!\nYour TO-DO list is empty! 🥳"
+                        content="Task declined!\nYour TO-DO list is empty! 🥳",
                     )
             # request error
             else:
@@ -248,8 +251,8 @@ class TodoButtons(discord.ui.View):
                 )
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
 
@@ -277,8 +280,7 @@ class TodoDropDown(discord.ui.Select):
         self.ask_msg_id = 0
 
     async def callback(self, interaction: discord.Interaction):
-        # await interaction.response.defer(ephemeral=True, thinking=True)
-
+        await interaction.response.defer()
         job_id = self.values[0]
         # creating token
         d = {}
@@ -305,13 +307,13 @@ class TodoDropDown(discord.ui.Select):
             todobuttonsview.job_id = data["id"]
             todobuttonsview.job_title = data["title"]
             todobuttonsview.ask_msg_id = self.ask_msg_id
-            await interaction.response.edit_message(
-                content=content, view=todobuttonsview
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id, content=content, view=todobuttonsview
             )
 
         else:
-            await interaction.response.send_message(
-                f"ERROR {status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"ERROR {status_code}\n{data}", ephemeral=True
             )
 
     def create_job_post_text(self, guild, data):
