@@ -50,7 +50,7 @@ class TodoButtons(discord.ui.View):
                 driver=str(interaction.guild.id),
             )
             em = discord.Embed(
-                title="#brief",
+                title="📣📣 Status Update",
                 description=self.job_title,
                 color=discord.Color.blue(),
             )
