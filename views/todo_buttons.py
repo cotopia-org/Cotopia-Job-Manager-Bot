@@ -54,7 +54,7 @@ class TodoButtons(discord.ui.View):
                 description=self.job_title,
                 color=discord.Color.blue(),
             )
-            em.set_author(name=str(JalaliDate.today()))
+            # em.set_author(name=str(JalaliDate.today()))
             channel = interaction.guild.system_channel
             if channel is None:
                 channel = interaction.guild.text_channels[0]

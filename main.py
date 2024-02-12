@@ -86,7 +86,7 @@ def run():
                             description=message.content,
                             color=discord.Color.blue(),
                         )
-                        em.set_author(name=str(JalaliDate.today()))
+                        # em.set_author(name=str(JalaliDate.today()))
                         channel = message.guild.system_channel
                         if channel is None:
                             channel = message.guild.text_channels[0]

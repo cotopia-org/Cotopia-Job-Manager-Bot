@@ -25,7 +25,7 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
         embed = discord.Embed(
             title="📣📣 Status Update", description=self.brief.value, color=discord.Color.blue()
         )
-        embed.set_author(name=str(JalaliDate.today()))
+        # embed.set_author(name=str(JalaliDate.today()))
         briefing.write_to_db(
             brief=self.brief.value, doer=str(self.user), driver=str(self.driver)
         )
