@@ -25,6 +25,7 @@ class FollowupButtonsView(discord.ui.View):
     @discord.ui.button(label="Yes!", style=discord.ButtonStyle.primary)
     async def yes(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.addressee == interaction.user:
+            interaction.response.defer()
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
                 doer=str(interaction.user),
@@ -110,6 +111,7 @@ class FollowupButtonsView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
+            interaction.response.defer()
             # make token and headers
             d = {}
             d["discord_guild"] = interaction.guild_id
@@ -135,8 +137,8 @@ class FollowupButtonsView(discord.ui.View):
                     doer=str(interaction.user.id),
                     isPair=False,
                 )
-                await interaction.response.send_message(
-                    "Task Status: Done!", ephemeral=True
+                await interaction.followup.send(
+                    content="Task Status: Done!", ephemeral=True
                 )
                 # deleting the ask msg
                 the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
@@ -171,8 +173,8 @@ class FollowupButtonsView(discord.ui.View):
 
             else:
                 print(f"status code: {r.status_code}\n{data}")
-                await interaction.response.send_message(
-                    f"status code: {r.status_code}\n{data}", ephemeral=True
+                await interaction.followup.send(
+                    content=f"status code: {r.status_code}\n{data}", ephemeral=True
                 )
 
         else:
@@ -185,6 +187,7 @@ class FollowupButtonsView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if self.addressee == interaction.user:
+            interaction.response.defer()
             # make token and headers
             d = {}
             d["discord_guild"] = interaction.guild_id
@@ -210,8 +213,8 @@ class FollowupButtonsView(discord.ui.View):
                     doer=str(interaction.user.id),
                     isPair=False,
                 )
-                await interaction.response.send_message(
-                    "Task Status: Todo!!", ephemeral=True
+                await interaction.followup.send(
+                    content="Task Status: Todo!!", ephemeral=True
                 )
                 # deleting the ask msg
                 the_ask_msg = await self.channel.fetch_message(self.ask_msg_id)
@@ -246,8 +249,8 @@ class FollowupButtonsView(discord.ui.View):
 
             else:
                 print(f"status code: {r.status_code}\n{data}")
-                await interaction.response.send_message(
-                    f"status code: {r.status_code}\n{data}", ephemeral=True
+                await interaction.followup.send(
+                    content=f"status code: {r.status_code}\n{data}", ephemeral=True
                 )
 
         else:
