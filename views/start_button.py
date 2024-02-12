@@ -22,6 +22,7 @@ class StartView(discord.ui.View):
     async def startjob(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
+        await interaction.response.defer()
         url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
@@ -34,8 +35,10 @@ class StartView(discord.ui.View):
                 doer=str(interaction.user.id),
                 isPair=False,
             )
-            await interaction.response.edit_message(
-                content="Task Status: Doing!", view=None, delete_after=60
+            await interaction.followup.edit_message(
+                message_id=interaction.message.id,
+                content="Task Status: Doing!",
+                view=None,
             )
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
@@ -116,6 +119,6 @@ class StartView(discord.ui.View):
 
         else:
             print(f"status code: {r.status_code}\n{data}")
-            await interaction.response.send_message(
-                f"status code: {r.status_code}\n{data}", ephemeral=True
+            await interaction.followup.send(
+                content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
