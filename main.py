@@ -82,7 +82,7 @@ def run():
                             driver=str(message.guild.id),
                         )
                         em = discord.Embed(
-                            title="📣📣 Status Update",
+                            title="📣 📣 Status Update",
                             description=message.content,
                             color=discord.Color.blue(),
                         )
