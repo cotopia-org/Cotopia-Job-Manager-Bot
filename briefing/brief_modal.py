@@ -11,7 +11,7 @@ from . import briefing
 
 class BriefModal(discord.ui.Modal, title="Submit your quick task!"):
     brief = discord.ui.TextInput(
-        style=discord.TextStyle.long,
+        style=discord.TextStyle.short,
         label="Your Quick Task",
         required=True,
         placeholder="Describe your task...",
