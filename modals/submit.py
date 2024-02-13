@@ -72,7 +72,9 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
         post_data = {}
         payload_dic = {}
         payload_dic["title"] = self.job_title.value
-        payload_dic["workspace"] = str(interaction.guild.id) + "/" + self.workspace.value
+        payload_dic["workspace"] = (
+            str(interaction.guild.id) + "/" + self.workspace.value
+        )
         if self.description.value != "":
             payload_dic["description"] = self.description.value
         if self.tags.value != "":
@@ -168,7 +170,11 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             wait=True,
         )
         record_id(
-            job_id=data["id"], post_id=msg.id, channel_id=channel.id, guild_id=guild.id
+            job_id=data["id"],
+            author_id=user.id,
+            post_id=msg.id,
+            channel_id=channel.id,
+            guild_id=guild.id,
         )
 
         webhooks = await channel.webhooks()
