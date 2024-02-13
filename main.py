@@ -453,7 +453,7 @@ def run():
             )
 
     @bot.tree.command()
-    async def brief(interaction: discord.Interaction):
+    async def quick_task(interaction: discord.Interaction):
         brief_modal = BriefModal()
         brief_modal.user = interaction.user
         brief_modal.driver = interaction.guild_id

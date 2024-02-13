@@ -9,12 +9,12 @@ from timetracker.utils import start as record_start
 from . import briefing
 
 
-class BriefModal(discord.ui.Modal, title="Submit your brief!"):
+class BriefModal(discord.ui.Modal, title="Submit your quick task!"):
     brief = discord.ui.TextInput(
         style=discord.TextStyle.long,
-        label="Your Brief",
+        label="Your Quick Task",
         required=True,
-        placeholder="What are you going to do in this session?",
+        placeholder="Describe your task...",
     )
 
     async def on_submit(self, interaction: discord.Interaction):
@@ -82,5 +82,5 @@ class BriefModal(discord.ui.Modal, title="Submit your brief!"):
                     print(e)
 
         await interaction.followup.send(
-            f"Your brief was submitted {self.user.mention}!", ephemeral=True
+            f"Your 'Quick Task' was submitted {self.user.mention}!", ephemeral=True
         )
