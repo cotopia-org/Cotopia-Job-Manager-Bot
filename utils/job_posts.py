@@ -108,3 +108,31 @@ def get_job_post_author_id(job_id: int, guild_id: int):
         return None
     else:
         return result[0]
+
+
+async def get_job_post(job_id: int, guild):
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
+    cursor = conn.cursor()
+    cursor.execute(
+        f"SELECT * FROM job_posts WHERE guild_id = {guild.id} AND job_id = {job_id};"
+    )
+    result = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    if result is None:
+        return None
+    else:
+        try:
+            channel = guild.get_channel(result[1])
+            msg = await channel.fetch_message(result[2])
+            return msg
+        except:  # noqa: E722
+            return None
