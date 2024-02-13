@@ -18,13 +18,13 @@ def record_id(
                    guild_id BIGINT NOT NULL,
                    channel_id BIGINT NOT NULL,
                    post_id BIGINT NOT NULL,
-                   author_id BIGINT NOT NULL,
-                   job_id INT NOT NULL
+                   job_id INT NOT NULL,
+                   author_id BIGINT NOT NULL
                    );"""
     )
     cursor.execute(
-        f"""INSERT INTO job_posts(guild_id, channel_id, post_id, author_id, job_id)
-                   VALUES({guild_id}, {channel_id}, {post_id}, {author_id}, {job_id});"""
+        f"""INSERT INTO job_posts(guild_id, channel_id, post_id, job_id, author_id)
+                   VALUES({guild_id}, {channel_id}, {post_id}, {job_id}, {author_id});"""
     )
 
     conn.commit()
