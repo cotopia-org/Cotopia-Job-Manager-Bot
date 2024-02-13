@@ -7,7 +7,7 @@ from briefing import briefing
 from status import utils as status
 from timetracker.utils import start as record_start
 from utils.event_recorder import write_event_to_db
-from utils.job_posts import get_job_link
+from utils.job_posts import get_job_link, get_job_post_author_id
 
 
 class StartView(discord.ui.View):
@@ -53,9 +53,17 @@ class StartView(discord.ui.View):
                     link = f"[view]({url})"
             except:  # noqa: E722
                 link = ""
+            desc_first_part = "I'm working on\n**"
+            author_id = get_job_post_author_id(
+                job_id=self.job_id, guild_id=interaction.guild.id
+            )
+            if author_id is not None and author_id != -1:
+                if author_id != interaction.user.id:
+                    # this means the task is writen by someone else
+                    desc_first_part = f"I'm helping <@{author_id}> on\n**"
             em = discord.Embed(
                 title="📣",
-                description="I'm working on\n**" + self.job_title + "**\n" + link,
+                description=desc_first_part + self.job_title + "**\n" + link,
                 color=discord.Color.blue(),
             )
             # em.set_author(name=str(JalaliDate.today()))
