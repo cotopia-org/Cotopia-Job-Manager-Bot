@@ -1,7 +1,10 @@
 import psycopg2
 
 
-def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
+# author_id id discord_id of the one who submitted the job
+def record_id(
+    job_id: int, author_id: int, post_id: int, channel_id: int, guild_id: int
+):
     conn = psycopg2.connect(
         host="localhost",
         dbname="postgres",
@@ -15,12 +18,13 @@ def record_id(job_id: int, post_id: int, channel_id: int, guild_id: int):
                    guild_id BIGINT NOT NULL,
                    channel_id BIGINT NOT NULL,
                    post_id BIGINT NOT NULL,
+                   author_id BIGINT NOT NULL,
                    job_id INT NOT NULL
                    );"""
     )
     cursor.execute(
-        f"""INSERT INTO job_posts(guild_id, channel_id, post_id, job_id)
-                   VALUES({guild_id}, {channel_id}, {post_id}, {job_id});"""
+        f"""INSERT INTO job_posts(guild_id, channel_id, post_id, author_id, job_id)
+                   VALUES({guild_id}, {channel_id}, {post_id}, {author_id}, {job_id});"""
     )
 
     conn.commit()
