@@ -21,6 +21,7 @@ from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView
 from views.doing_buttons import DoingButtons
 from views.followup_buttons import FollowupButtonsView
+from views.no_doing_buttons import NoDoingButtons
 from views.todo_dropdown import TodoView
 
 logger = settings.logging.getLogger("bot")
@@ -378,7 +379,11 @@ def run():
         status_code = r.status_code
         if status_code == 200:
             if len(data) <= 0:
-                await ctx.send("You have no tasks in DOING!", ephemeral=True)
+                buttons = NoDoingButtons()
+                de_msg = await ctx.send(
+                    "You have no tasks in DOING!", view=buttons, ephemeral=True
+                )
+                buttons.ask_msg_id = de_msg.id
             else:
                 task_index = len(data) - 1  # last one
                 job_id = data[task_index]["job"]["id"]
