@@ -19,7 +19,7 @@ class StartWhenDoingView(discord.ui.View):
         self.job_title = ""
         self.ask_msg_id = 0
 
-    @discord.ui.button(label="▶️ Done & Start", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="✅ ▶️ Move current task to Done & Start this", style=discord.ButtonStyle.green)
     async def done_and_startjob(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
@@ -169,7 +169,7 @@ class StartWhenDoingView(discord.ui.View):
                 content=f"status code: {r.status_code}\n{data}", ephemeral=True
             )
 
-    @discord.ui.button(label="▶️ Puase & Start", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="⏸️ ▶️ Move current task to Todo & Start this", style=discord.ButtonStyle.secondary)
     async def puase_and_startjob(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
