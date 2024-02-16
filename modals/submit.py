@@ -7,6 +7,7 @@ import requests
 from bot_auth import create_token
 from utils.job_posts import record_id
 from views.start_button import StartView
+from views.start_whendoing_btns import StartWhenDoingView
 from views.submitted_job import SubmittedJobView
 
 
@@ -123,7 +124,27 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 data=post_data,
             )
             if self.self_accept:
-                startview = StartView()
+                # We should check if the user has a task in doing or not
+                has_doing = False
+                doing_job_id = 0
+                url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+                r = requests.get(url=url, headers=headers)
+                doing_data = r.json()
+                status_code = r.status_code
+                if status_code == 200:
+                    if len(doing_data) > 0:
+                        # so doing is not empty
+                        has_doing = True
+                        doing_job_id = doing_data[len(doing_data) - 1]["job"]["id"]
+                else:
+                    print("problem getting doings of the user!")
+                    print(f"ERROR {status_code}\n{data}")
+
+                if has_doing:
+                    startview = StartWhenDoingView()
+                    startview.doing_job_id = doing_job_id
+                else:
+                    startview = StartView()
                 startview.headers = headers
                 startview.job_id = data["id"]
                 startview.job_title = data["title"]
