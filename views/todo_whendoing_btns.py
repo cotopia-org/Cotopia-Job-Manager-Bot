@@ -12,6 +12,7 @@ from status import utils as status
 from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
+from views.no_todo_buttons import NoTodoButtons
 
 
 class TodoWhenDoingButtons(discord.ui.View):
@@ -369,10 +370,13 @@ class TodoWhenDoingButtons(discord.ui.View):
                     )
                 # todo list is empty
                 else:
-                    await interaction.followup.edit_message(
+                    buttons = NoTodoButtons()
+                    da_msg = await interaction.followup.edit_message(
                         message_id=interaction.message.id,
                         content="Task moved to 'Done'!\nYour TO-DO list is empty! 🥳",
+                        view=buttons,
                     )
+                    buttons.ask_msg_id = da_msg.id
             # request error
             else:
                 await interaction.followup.send(
@@ -430,10 +434,13 @@ class TodoWhenDoingButtons(discord.ui.View):
                     )
                 # todo list is empty
                 else:
-                    await interaction.followup.edit_message(
+                    buttons = NoTodoButtons()
+                    da_msg = await interaction.followup.edit_message(
                         message_id=interaction.message.id,
                         content="Task declined!\nYour TO-DO list is empty! 🥳",
+                        view=buttons,
                     )
+                    buttons.ask_msg_id = da_msg.id
             # request error
             else:
                 await interaction.followup.send(
@@ -609,10 +616,13 @@ class TodoButtons(discord.ui.View):
                     )
                 # todo list is empty
                 else:
-                    await interaction.followup.edit_message(
+                    buttons = NoTodoButtons()
+                    da_msg = await interaction.followup.edit_message(
                         message_id=interaction.message.id,
                         content="Task moved to 'Done'!\nYour TO-DO list is empty! 🥳",
+                        view=buttons,
                     )
+                    buttons.ask_msg_id = da_msg.id
             # request error
             else:
                 await interaction.followup.send(
@@ -670,10 +680,13 @@ class TodoButtons(discord.ui.View):
                     )
                 # todo list is empty
                 else:
-                    await interaction.followup.edit_message(
+                    buttons = NoTodoButtons()
+                    da_msg = await interaction.followup.edit_message(
                         message_id=interaction.message.id,
                         content="Task declined!\nYour TO-DO list is empty! 🥳",
+                        view=buttons,
                     )
+                    buttons.ask_msg_id = da_msg.id
             # request error
             else:
                 await interaction.followup.send(

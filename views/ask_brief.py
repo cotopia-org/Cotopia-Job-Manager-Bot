@@ -3,6 +3,7 @@ import requests
 
 from bot_auth import create_token
 from modals.submit import JobSubmitModal
+from views.no_todo_buttons import NoTodoButtons
 from views.todo_dropdown import TodoView
 
 
@@ -86,7 +87,11 @@ class AskBriefView(discord.ui.View):
                     )
                 # todo list is empty
                 else:
-                    await interaction.followup.send("Your TO-DO list is empty! 🥳")
+                    buttons = NoTodoButtons()
+                    da_msg = await interaction.followup.send(
+                        content="Your TO-DO list is empty! 🥳", view=buttons
+                    )
+                    buttons.ask_msg_id = da_msg.id
             # request error
             else:
                 await interaction.followup.send(

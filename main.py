@@ -22,6 +22,7 @@ from views.ask_brief import AskBriefView
 from views.doing_buttons import DoingButtons
 from views.followup_buttons import FollowupButtonsView
 from views.no_doing_buttons import NoDoingButtons
+from views.no_todo_buttons import NoTodoButtons
 from views.todo_dropdown import TodoView
 
 logger = settings.logging.getLogger("bot")
@@ -450,7 +451,11 @@ def run():
                 )
             # todo list is empty
             else:
-                await ctx.interaction.followup.send("Your TO-DO list is empty! 🥳")
+                buttons = NoTodoButtons()
+                da_msg = await ctx.interaction.followup.send(
+                    content="Your TO-DO list is empty! 🥳", view=buttons
+                )
+                buttons.ask_msg_id = da_msg.id
         # request error
         else:
             await ctx.interaction.followup.send(
