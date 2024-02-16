@@ -493,7 +493,28 @@ class TodoDropDown(discord.ui.Select):
         status_code = r.status_code
         if status_code == 200:
             content = self.create_job_post_text(guild=interaction.guild, data=data)
-            todobuttonsview = TodoButtons()
+            # We should check if the user has a task in doing or not
+            has_doing = False
+            doing_job_id = 0
+            url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+            r = requests.get(url=url, headers=headers)
+            doing_data = r.json()
+            status_code = r.status_code
+            if status_code == 200:
+                if len(doing_data) > 0:
+                    # so doing is not empty
+                    has_doing = True
+                    doing_job_id = doing_data[len(doing_data) - 1]["job"]["id"]
+            else:
+                print("problem getting doings of the user!")
+                print(f"ERROR {status_code}\n{data}")
+
+            if has_doing:
+                todobuttonsview = TodoWhenDoingButtons()
+                todobuttonsview.doing_job_id = doing_job_id
+            else:
+                todobuttonsview = TodoButtons()
+
             todobuttonsview.headers = headers
             todobuttonsview.job_id = data["id"]
             todobuttonsview.job_title = data["title"]
