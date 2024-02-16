@@ -10,7 +10,7 @@ from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
 
 
-class StartView(discord.ui.View):
+class StartWhenDoingView(discord.ui.View):
     def __init__(self, *, timeout: float | None = 1900800):
         super().__init__(timeout=timeout)
         self.headers = None
