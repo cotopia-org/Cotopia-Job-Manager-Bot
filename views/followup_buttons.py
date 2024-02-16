@@ -8,7 +8,6 @@ from briefing import briefing
 from status import utils as status
 from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
-from utils.event_recorder import write_event_to_db
 from utils.job_posts import get_job_link, get_job_post_author_id
 from views.ask_brief import AskBriefView
 
@@ -147,12 +146,6 @@ class FollowupButtonsView(discord.ui.View):
             data = r.json()
             if r.status_code == 200:
                 print(f"status code: {r.status_code}\n{data}")
-                write_event_to_db(
-                    driver=str(interaction.guild.id),
-                    kind="TASK DONE",
-                    doer=str(interaction.user.id),
-                    isPair=False,
-                )
                 await interaction.followup.send(
                     content="Task Status: Done!", ephemeral=True
                 )
@@ -223,12 +216,6 @@ class FollowupButtonsView(discord.ui.View):
             data = r.json()
             if r.status_code == 200:
                 print(f"status code: {r.status_code}\n{data}")
-                write_event_to_db(
-                    driver=str(interaction.guild.id),
-                    kind="TASK PAUSED",
-                    doer=str(interaction.user.id),
-                    isPair=False,
-                )
                 await interaction.followup.send(
                     content="Task Status: Todo!!", ephemeral=True
                 )

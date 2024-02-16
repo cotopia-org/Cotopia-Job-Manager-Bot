@@ -6,7 +6,6 @@ import requests
 from briefing import briefing
 from status import utils as status
 from timetracker.utils import start as record_start
-from utils.event_recorder import write_event_to_db
 from utils.job_posts import get_job_link, get_job_post_author_id
 
 
@@ -29,12 +28,6 @@ class StartView(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK STARTED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             await interaction.followup.edit_message(
                 message_id=interaction.message.id,
                 content="Task Status: Doing!",

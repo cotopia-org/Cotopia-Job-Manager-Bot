@@ -3,7 +3,6 @@ import requests
 
 from status import utils as status
 from timetracker.utils import end as record_end
-from utils.event_recorder import write_event_to_db
 
 
 class DoingButtons(discord.ui.View):
@@ -21,12 +20,6 @@ class DoingButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK DONE",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             await interaction.followup.edit_message(
                 message_id=interaction.message.id,
                 content="Task moved to DONE!",
@@ -62,12 +55,6 @@ class DoingButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK PAUSED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             await interaction.followup.edit_message(
                 message_id=interaction.message.id,
                 content="Task moved to TODO!",

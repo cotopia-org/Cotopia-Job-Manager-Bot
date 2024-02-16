@@ -5,7 +5,6 @@ import discord
 import requests
 
 from bot_auth import create_token
-from utils.event_recorder import write_event_to_db
 from utils.job_posts import record_id
 from views.start_button import StartView
 from views.submitted_job import SubmittedJobView
@@ -91,12 +90,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
         if r.status_code == 201:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="JOB SUBMITTED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             post_data = data
 
             # self accept
@@ -108,12 +101,6 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 if self_accept_req.status_code == 201:
                     print(
                         f"status code: {self_accept_req.status_code}\n{self_accept_data}"
-                    )
-                    write_event_to_db(
-                        driver=str(interaction.guild.id),
-                        kind="JOB ACCEPTED",
-                        doer=str(interaction.user.id),
-                        isPair=False,
                     )
                     post_data["acceptors"] = [interaction.user]
 

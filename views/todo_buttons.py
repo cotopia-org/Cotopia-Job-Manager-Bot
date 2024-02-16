@@ -10,7 +10,6 @@ from bot_auth import create_token
 from briefing import briefing
 from status import utils as status
 from timetracker.utils import start as record_start
-from utils.event_recorder import write_event_to_db
 from utils.job_posts import get_job_link, get_job_post_author_id
 
 
@@ -33,12 +32,6 @@ class TodoButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK STARTED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             await interaction.followup.edit_message(
                 message_id=interaction.message.id,
                 content="Task Status: Doing!",
@@ -152,12 +145,6 @@ class TodoButtons(discord.ui.View):
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK DONE",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             # sending request to get todos
             url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)
@@ -219,12 +206,6 @@ class TodoButtons(discord.ui.View):
             # TO_DO
             # edit the job post and remove user in acceptors
             print(f"status code: {r.status_code}\n{data}")
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="TASK DECLINED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             # sending request to get todos
             url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)

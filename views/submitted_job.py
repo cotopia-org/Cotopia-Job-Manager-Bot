@@ -2,7 +2,6 @@ import discord
 import requests
 
 from bot_auth import create_token
-from utils.event_recorder import write_event_to_db
 from utils.job_posts import get_job_id
 
 
@@ -39,12 +38,6 @@ class SubmittedJobView(discord.ui.View):
         status_code = r.status_code
 
         if status_code == 201:
-            write_event_to_db(
-                driver=str(interaction.guild.id),
-                kind="JOB ACCEPTED",
-                doer=str(interaction.user.id),
-                isPair=False,
-            )
             old_text = interaction.message.content
             s = old_text.split("**Accepted By:**")
             new_text = s[0]
