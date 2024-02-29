@@ -467,17 +467,16 @@ def run():
         emrooz = JalaliDate.today()
         avale_hafte = emrooz - timedelta(days=emrooz.weekday())
         # akhare_hafte = emrooz + timedelta(days=(6 - emrooz.weekday()))
-        start_epoch = int(
-            JalaliDateTime(
-                year=avale_hafte.year,
-                month=avale_hafte.month,
-                day=avale_hafte.day,
-                hour=0,
-                minute=0,
-                second=0,
-                tzinfo=pytz.timezone("Asia/Tehran"),
-            ).timestamp()
+        start_dt = JalaliDateTime(
+            year=avale_hafte.year,
+            month=avale_hafte.month,
+            day=avale_hafte.day,
+            hour=0,
+            minute=0,
+            second=0,
         )
+        localized_start_dt = pytz.timezone("Asia/Tehran").localize(dt=start_dt)
+        start_epoch = int(localized_start_dt.timestamp())
         end_epoch = start_epoch + 604800
 
         report = gen_user_report(
