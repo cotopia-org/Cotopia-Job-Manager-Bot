@@ -6,7 +6,7 @@ import discord
 import pytz
 import requests
 from discord.ext import commands
-from persiantools.jdatetime import JalaliDate, JalaliDateTime
+from persiantools.jdatetime import JalaliDate, JalaliDateTime, timedelta
 
 import settings
 from bot_auth import create_token
@@ -34,13 +34,6 @@ last_brief_ask = {}
 def rightnow():
     epoch = int(time.time())
     return epoch
-
-
-def today_jalali():
-    the_string = str(JalaliDate.today())
-    slices = the_string.split("-")
-    dic = {"y": int(slices[0]), "m": int(slices[1]), "d": int(slices[2])}
-    return dic
 
 
 def run():
@@ -471,33 +464,21 @@ def run():
 
     @bot.hybrid_command()
     async def report(ctx, member: discord.Member):
-        now = today_jalali()
+        emrooz = JalaliDate.today()
+        avale_hafte = emrooz - timedelta(days=emrooz.weekday())
+        # akhare_hafte = emrooz + timedelta(days=(6 - emrooz.weekday()))
         start_epoch = int(
             JalaliDateTime(
-                year=now["y"],
-                month=now["m"],
-                day=20,
+                year=avale_hafte.year,
+                month=avale_hafte.month,
+                day=avale_hafte.day,
                 hour=0,
                 minute=0,
                 second=0,
                 tzinfo=pytz.timezone("Asia/Tehran"),
-            )
-            .to_gregorian()
-            .strftime("%s")
+            ).timestamp()
         )
-        end_epoch = int(
-            JalaliDateTime(
-                year=now["y"],
-                month=now["m"],
-                day=now["d"],
-                hour=23,
-                minute=59,
-                second=59,
-                tzinfo=pytz.timezone("Asia/Tehran"),
-            )
-            .to_gregorian()
-            .strftime("%s")
-        )
+        end_epoch = start_epoch + 604800
 
         report = gen_user_report(
             guild_id=ctx.guild.id,
