@@ -1,4 +1,7 @@
 import psycopg2
+from persiantools.jdatetime import JalaliDateTime
+
+from utils import job_posts
 
 
 def get_user_events(guild_id: int, discord_id: int, start_epoch: int, end_epoch: int):
@@ -88,3 +91,54 @@ def gen_user_report(guild_id: int, discord_id: int, start_epoch: int, end_epoch:
         the_dict["time"] = {"From": start_epoch, "To": end_epoch}
         the_dict["user"] = {"guild_id": guild_id, "discord_id": discord_id}
         return the_dict
+
+
+async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int):
+    ugly_report = gen_user_report(
+        guild_id=guild.id,
+        discord_id=discord_id,
+        start_epoch=start_epoch,
+        end_epoch=end_epoch,
+    )
+    if "time" not in ugly_report:
+        return "No Events Found!"
+    else:
+        ptext = (
+            "Az "
+            + str(JalaliDateTime.fromtimestamp(ugly_report["time"]["From"]))
+            + "\n"
+        )
+        ptext = (
+            ptext
+            + "Ta "
+            + str(JalaliDateTime.fromtimestamp(ugly_report["time"]["To"]))
+            + "\n"
+        )
+        ptext = ptext + "User: <@" + str(ugly_report["user"]["discord_id"]) + ">\n"
+        del ugly_report["time"]
+        del ugly_report["user"]
+        for i in ugly_report:
+            if "job_id" in ugly_report[i]:
+                job_id = ugly_report[i]["job_id"]
+                url = await job_posts.get_job_link(job_id=job_id, guild=guild)
+                if url is None:
+                    link = ""
+                else:
+                    link = f"   [view]({url})"
+                ptext = (
+                    ptext
+                    + ugly_report[i]["title"]
+                    + "   "
+                    + link
+                    + "   `"
+                    + str(ugly_report[i]["duration"])
+                    + " h`\n"
+                )
+            else:
+                ptext = (
+                    ptext
+                    + ugly_report[i]["title"]
+                    + "   `"
+                    + str(ugly_report[i]["duration"])
+                    + " h`\n"
+                )
