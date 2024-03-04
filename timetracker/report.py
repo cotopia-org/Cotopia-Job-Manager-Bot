@@ -142,3 +142,5 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
                     + str(ugly_report[i]["duration"])
                     + " h`\n"
                 )
+
+        return ptext
