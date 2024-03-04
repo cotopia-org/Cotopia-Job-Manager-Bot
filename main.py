@@ -1,5 +1,4 @@
 import asyncio
-import pprint
 import time
 
 import discord
@@ -15,7 +14,7 @@ from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
 from status.utils import whatsup
-from timetracker.report import gen_user_report
+from timetracker.report import pretty_report
 from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
 from views.ask_brief import AskBriefView
@@ -479,14 +478,14 @@ def run():
         start_epoch = int(localized_start_dt.timestamp())
         end_epoch = start_epoch + 604800
 
-        report = gen_user_report(
-            guild_id=ctx.guild.id,
+        report = await pretty_report(
+            guild=ctx.guild,
             discord_id=member.id,
             start_epoch=start_epoch,
             end_epoch=end_epoch,
         )
 
-        await ctx.send(pprint.pformat(report), ephemeral=True)
+        await ctx.send(report, ephemeral=True)
 
     # @bot.hybrid_command()
     # async def token(ctx):
