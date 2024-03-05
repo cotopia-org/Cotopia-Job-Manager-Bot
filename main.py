@@ -1,5 +1,6 @@
 import asyncio
 import time
+from typing import Optional
 
 import discord
 import pytz
@@ -462,21 +463,65 @@ def run():
         await interaction.response.send_modal(brief_modal)
 
     @bot.hybrid_command()
-    async def report(ctx, member: discord.Member):
+    async def report(
+        ctx,
+        member: discord.Member,
+        start_ssss: Optional[int] = 1349,
+        start_mm: Optional[int] = 1,
+        start_rr: Optional[int] = 1,
+        end_ssss: Optional[int] = 1415,
+        end_mm: Optional[int] = 12,
+        end_rr: Optional[int] = 29,
+    ):
         emrooz = JalaliDate.today()
         avale_hafte = emrooz - timedelta(days=emrooz.weekday())
         # akhare_hafte = emrooz + timedelta(days=(6 - emrooz.weekday()))
-        start_dt = JalaliDateTime(
-            year=avale_hafte.year,
-            month=avale_hafte.month,
-            day=avale_hafte.day,
-            hour=0,
-            minute=0,
-            second=0,
-        )
-        localized_start_dt = pytz.timezone("Asia/Tehran").localize(dt=start_dt)
-        start_epoch = int(localized_start_dt.timestamp())
-        end_epoch = start_epoch + 604800
+
+        if start_ssss == 1349 and start_mm == 1 and start_rr == 1:
+            start_dt = JalaliDateTime(
+                year=avale_hafte.year,
+                month=avale_hafte.month,
+                day=avale_hafte.day,
+                hour=0,
+                minute=0,
+                second=0,
+            )
+            localized_start_dt = pytz.timezone("Asia/Tehran").localize(dt=start_dt)
+            start_epoch = int(localized_start_dt.timestamp())
+        else:
+            try:
+                start_dt = JalaliDateTime(year=start_ssss, month=start_mm, day=start_rr)
+                localized_start_dt = pytz.timezone("Asia/Tehran").localize(dt=start_dt)
+                start_epoch = int(localized_start_dt.timestamp())
+            except:  # noqa: E722
+                await ctx.send("Please enter a valid date!", ephemeral=True)
+                return
+
+        if end_ssss == 1415 and end_mm == 12 and end_rr == 29:
+            end_epoch = start_epoch + 604800
+
+        else:
+            try:
+                end_dt = JalaliDateTime(
+                    year=end_ssss,
+                    month=end_mm,
+                    day=end_rr,
+                    hour=23,
+                    minute=59,
+                    second=59,
+                )
+                localized_end_dt = pytz.timezone("Asia/Tehran").localize(dt=end_dt)
+                end_epoch = int(localized_end_dt.timestamp()) + 1
+            except:  # noqa: E722
+                await ctx.send("Please enter a valid date!", ephemeral=True)
+                return
+
+        if int(start_epoch) >= int(end_epoch):
+            await ctx.send(
+                "**Start Date** should be before **End Date**! Try Again!",
+                ephemeral=True,
+            )
+            return
 
         report = await pretty_report(
             guild=ctx.guild,
