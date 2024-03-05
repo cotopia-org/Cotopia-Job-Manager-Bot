@@ -498,7 +498,16 @@ def run():
                 return
 
         if end_ssss == 1415 and end_mm == 12 and end_rr == 29:
-            end_epoch = start_epoch + 604800
+            end_dt = JalaliDateTime(
+                    year=emrooz.year,
+                    month=emrooz.month,
+                    day=emrooz.day,
+                    hour=23,
+                    minute=59,
+                    second=59,
+                )
+            localized_end_dt = pytz.timezone("Asia/Tehran").localize(dt=end_dt)
+            end_epoch = int(localized_end_dt.timestamp()) + 1
 
         else:
             try:
