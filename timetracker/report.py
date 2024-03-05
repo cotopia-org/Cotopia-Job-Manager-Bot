@@ -117,6 +117,7 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
         ptext = ptext + "User: <@" + str(ugly_report["user"]["discord_id"]) + ">\n"
         del ugly_report["time"]
         del ugly_report["user"]
+        ptext = ptext + "---------------------------------\n"
         for i in ugly_report:
             if "job_id" in ugly_report[i]:
                 job_id = ugly_report[i]["job_id"]
@@ -127,6 +128,7 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
                     link = f"   [view]({url})\n"
                 ptext = (
                     ptext
+                    + "- "
                     + ugly_report[i]["title"]
                     + "   `"
                     + str(ugly_report[i]["duration"])
@@ -136,6 +138,7 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
             else:
                 ptext = (
                     ptext
+                    + "- "
                     + ugly_report[i]["title"]
                     + "   `"
                     + str(ugly_report[i]["duration"])
