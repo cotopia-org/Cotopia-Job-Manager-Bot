@@ -124,14 +124,14 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
                 if url is None:
                     link = ""
                 else:
-                    title = ugly_report[i]["title"]
-                    link = f"[{title}]({url})"
+                    link = f"   [view]({url})\n"
                 ptext = (
                     ptext
-                    + link
+                    + ugly_report[i]["title"]
                     + "   `"
                     + str(ugly_report[i]["duration"])
-                    + " h`\n"
+                    + " h`"
+                    + link
                 )
             else:
                 ptext = (
