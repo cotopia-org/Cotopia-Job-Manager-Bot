@@ -139,7 +139,7 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
                 ptext = (
                     ptext
                     + "- "
-                    + ugly_report[i]["title"]
+                    + ugly_report[i]["title"].replace("\n", "\n   ")
                     + "   `"
                     + str(ugly_report[i]["duration"])
                     + " h`\n"
