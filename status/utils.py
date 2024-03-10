@@ -22,7 +22,7 @@ async def gen_status_text(guild):
         # check if it should record a brief
         # if true, then the person is idle
         # if false, then read the brief
-        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
+        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i.id)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
 
@@ -173,7 +173,7 @@ async def update_status_text(guild):
             if i in idles:
                 continue
 
-        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i)):
+        if not briefing.should_record_brief(driver=str(guild.id), doer=str(i.id)):
             # now read the brief
             b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
 

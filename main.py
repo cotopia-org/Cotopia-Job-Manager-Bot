@@ -281,7 +281,7 @@ def run():
 
         # When user enters voice channels
         if before.channel is None:
-            if briefing.should_record_brief(driver=str(guild.id), doer=str(member)):
+            if briefing.should_record_brief(driver=str(guild.id), doer=str(member.id)):
                 if just_asked(str(member.id)) is False:
                     # Ask 8 seconds later
                     last_brief_ask[str(member) + "@" + str(guild.id)] = (

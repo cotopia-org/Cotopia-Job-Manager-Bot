@@ -22,7 +22,7 @@ async def check(guild, member, before, after):
                 # we should check if she has a brief AKA should_record_brief() is False
                 # this means she is already up to something
                 if not briefing.should_record_brief(
-                    driver=str(guild.id), doer=str(member)
+                    driver=str(guild.id), doer=str(member.id)
                 ):
                     # USER HAS A BRIEF
                     print("USER HAS A BRIEF")
@@ -90,7 +90,7 @@ async def check(guild, member, before, after):
             print("USER IS NOT IDLE")
             # we should check if she has a brief AKA should_record_brief() is False
             # this means she is already up to something
-            if not briefing.should_record_brief(driver=str(guild.id), doer=str(member)):
+            if not briefing.should_record_brief(driver=str(guild.id), doer=str(member.id)):
                 # USER HAS A BRIEF
                 print("USER HAS A BRIEF")
                 try:
