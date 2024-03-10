@@ -75,7 +75,7 @@ class StartWhenDoingView(discord.ui.View):
             )
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
-                doer=str(interaction.user),
+                doer=str(interaction.user.id),
                 driver=str(interaction.guild.id),
             )
             try:
@@ -228,7 +228,7 @@ class StartWhenDoingView(discord.ui.View):
             )
             briefing.write_to_db(
                 brief=self.job_title + "   id:" + str(self.job_id),
-                doer=str(interaction.user),
+                doer=str(interaction.user.id),
                 driver=str(interaction.guild.id),
             )
             try:

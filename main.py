@@ -82,7 +82,7 @@ def run():
                     if message.author in replied_to.mentions:
                         briefing.write_to_db(
                             brief=message.content,
-                            doer=str(message.author),
+                            doer=str(message.author.id),
                             driver=str(message.guild.id),
                         )
                         em = discord.Embed(

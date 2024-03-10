@@ -28,7 +28,7 @@ class BriefModal(discord.ui.Modal, title="Submit your quick task!"):
         )
         # embed.set_author(name=str(JalaliDate.today()))
         briefing.write_to_db(
-            brief=self.brief.value, doer=str(self.user), driver=str(self.driver)
+            brief=self.brief.value, doer=str(self.user.id), driver=str(self.driver)
         )
         webhook = await channel.create_webhook(name=self.user.name)
         if self.user.nick is None:
