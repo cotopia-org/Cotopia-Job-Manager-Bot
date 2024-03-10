@@ -24,7 +24,7 @@ async def gen_status_text(guild):
         # if false, then read the brief
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i.id)):
             # now read the brief
-            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
+            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i.id))
 
             # remove "   id:" and set job_id
             b = b.split("   id:")
@@ -175,7 +175,7 @@ async def update_status_text(guild):
 
         if not briefing.should_record_brief(driver=str(guild.id), doer=str(i.id)):
             # now read the brief
-            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i))
+            b = briefing.get_last_brief(driver=str(guild.id), doer=str(i.id))
 
             # remove "   id:" and set job_id
             b = b.split("   id:")
