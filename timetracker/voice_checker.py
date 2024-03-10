@@ -4,9 +4,10 @@ from briefing import briefing
 from status.utils import is_idle, whatsup
 from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
+from timetracker.personal_report import send_personal_msg
 
 
-def check(guild, member, before, after):
+async def check(guild, member, before, after):
     print(f"VOICE CHECKER {int(time.time())}")
     if before.channel is None:
         # USER JOINED VOICE
@@ -55,6 +56,7 @@ def check(guild, member, before, after):
                 # no pending is recorded
                 try:
                     record_end(guild_id=guild.id, discord_id=member.id)
+                    await send_personal_msg(guild=guild, member=member)
                 except Exception as e:
                     print(e)
 

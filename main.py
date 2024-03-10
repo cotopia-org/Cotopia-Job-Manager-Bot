@@ -160,7 +160,7 @@ def run():
 
         guild = member.guild
 
-        event_checker(guild=guild, member=member, before=before, after=after)
+        await event_checker(guild=guild, member=member, before=before, after=after)
 
         # func that asks for brief after a while
         task2 = None
