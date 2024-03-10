@@ -146,3 +146,48 @@ async def pretty_report(guild, discord_id: int, start_epoch: int, end_epoch: int
                 )
 
         return ptext
+
+
+async def personal_report(guild, discord_id: int, start_epoch: int, end_epoch: int):
+    ugly_report = gen_user_report(
+        guild_id=guild.id,
+        discord_id=discord_id,
+        start_epoch=start_epoch,
+        end_epoch=end_epoch,
+    )
+    if "time" not in ugly_report:
+        return False
+    else:
+        ptext = f"Your Job Manager logs of past 72 hours in `{guild.name}`"
+        ptext = ptext + "If you don't wish to receive these, just send `!!unsubscribe`."
+        del ugly_report["time"]
+        del ugly_report["user"]
+        ptext = ptext + "---------------------------------\n"
+        for i in ugly_report:
+            if "job_id" in ugly_report[i]:
+                job_id = ugly_report[i]["job_id"]
+                url = await job_posts.get_job_link(job_id=job_id, guild=guild)
+                if url is None:
+                    link = ""
+                else:
+                    link = f"   [view]({url})\n"
+                ptext = (
+                    ptext
+                    + "- "
+                    + ugly_report[i]["title"]
+                    + "   `"
+                    + str(ugly_report[i]["duration"])
+                    + " h`"
+                    + link
+                )
+            else:
+                ptext = (
+                    ptext
+                    + "- "
+                    + ugly_report[i]["title"].replace("\n", "\n   ")
+                    + "   `"
+                    + str(ugly_report[i]["duration"])
+                    + " h`\n"
+                )
+
+        return ptext

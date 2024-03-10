@@ -15,6 +15,8 @@ from briefing.brief_modal import BriefModal
 from modals.submit import JobSubmitModal
 from status import utils as status
 from status.utils import whatsup
+from timetracker.personal_report import subscribe as sub_personal_report
+from timetracker.personal_report import unsubscribe as unsub_personal_report
 from timetracker.report import pretty_report
 from timetracker.utils import start as record_start
 from timetracker.voice_checker import check as event_checker
@@ -61,6 +63,13 @@ def run():
     @bot.event
     async def on_message(message):
         if message.author == bot.user:
+            return
+
+        if message.content == "!!unsubscribe":
+            await unsub_personal_report(member=message.author)
+            return
+        if message.content == "!!subscribe":
+            await sub_personal_report(member=message.author)
             return
 
         # RECORDING BRIEF
@@ -499,13 +508,13 @@ def run():
 
         if end_ssss == 1415 and end_mm == 12 and end_rr == 29:
             end_dt = JalaliDateTime(
-                    year=emrooz.year,
-                    month=emrooz.month,
-                    day=emrooz.day,
-                    hour=23,
-                    minute=59,
-                    second=59,
-                )
+                year=emrooz.year,
+                month=emrooz.month,
+                day=emrooz.day,
+                hour=23,
+                minute=59,
+                second=59,
+            )
             localized_end_dt = pytz.timezone("Asia/Tehran").localize(dt=end_dt)
             end_epoch = int(localized_end_dt.timestamp()) + 1
 

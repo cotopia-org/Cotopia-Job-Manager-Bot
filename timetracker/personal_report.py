@@ -2,6 +2,8 @@ import time
 
 import psycopg2
 
+from timetracker.report import personal_report
+
 
 # returns epoch of NOW: int
 def rightnow():
@@ -11,7 +13,12 @@ def rightnow():
 
 async def send_personal_msg(guild, member):
     if should_send(guild_id=guild.id, discord_id=member.id):
-        await member.send("yoooo")
+        now = rightnow()
+        report = await personal_report(
+            guild=guild, discord_id=member.id, start_epoch=now - 259200, end_epoch=now
+        )
+        if report is not False:
+            await member.send(report)
 
 
 def should_send(guild_id: int, discord_id: int):
@@ -51,7 +58,7 @@ def should_send(guild_id: int, discord_id: int):
         return True
     else:
         if db_result[2]:
-            if rightnow() - db_result[3] > 86300:  # 24 hours - 100 seconds 
+            if rightnow() - db_result[3] > 259200:
                 # update
                 cursor.execute(
                     """UPDATE personal_report
@@ -74,3 +81,47 @@ def should_send(guild_id: int, discord_id: int):
             cursor.close()
             conn.close()
             return False
+
+
+async def unsubscribe(member):
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
+    cursor = conn.cursor()
+    cursor.execute(
+        """UPDATE personal_report
+                    SET user_wants = %s
+                    WHERE discord_id = %s;""",
+        (False, member.id),
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    await member.send("Alright! I wont send reports to you any more.")
+    await member.send("If you changed your mind, just send `!!subscribe`")
+
+
+async def subscribe(member):
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="postgres",
+        user="postgres",
+        password="Tp\ZS?gfLr|]'a",
+        port=5432,
+    )
+    cursor = conn.cursor()
+    cursor.execute(
+        """UPDATE personal_report
+                    SET user_wants = %s
+                    WHERE discord_id = %s;""",
+        (True, member.id),
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    await member.send("Alright! I will send reports to you.")
+    await member.send("If you changed your mind, just send `!!unsubscribe`")
