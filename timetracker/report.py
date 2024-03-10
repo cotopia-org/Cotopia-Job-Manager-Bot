@@ -158,8 +158,8 @@ async def personal_report(guild, discord_id: int, start_epoch: int, end_epoch: i
     if "time" not in ugly_report:
         return False
     else:
-        ptext = f"Your Job Manager logs of past 72 hours in `{guild.name}`"
-        ptext = ptext + "If you don't wish to receive these, just send `!!unsubscribe`."
+        ptext = f"Your Job Manager logs of past 72 hours in `{guild.name}`\n"
+        ptext = ptext + "If you don't wish to receive these, just send `!!unsubscribe`.\n"
         del ugly_report["time"]
         del ugly_report["user"]
         ptext = ptext + "---------------------------------\n"
