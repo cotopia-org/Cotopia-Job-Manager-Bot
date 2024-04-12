@@ -1,4 +1,5 @@
 import re
+from requests.structures import CaseInsensitiveDict
 
 
 def find_ats(text: str):
@@ -6,7 +7,7 @@ def find_ats(text: str):
 
 def create_names_dict(guild):
     members = guild.members
-    result = {}
+    result = CaseInsensitiveDict()
     for each in members:
         result[each.name] = each.id
         if each.nick is not None:
