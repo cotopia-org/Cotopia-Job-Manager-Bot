@@ -6,6 +6,7 @@ import requests
 
 from bot_auth import create_token
 from utils.job_posts import record_id
+from utils.at_to_discord_mention import replace as at_to_mention
 from views.start_button import StartView
 from views.start_whendoing_btns import StartWhenDoingView
 from views.submitted_job import SubmittedJobView
@@ -71,14 +72,21 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
         post_data = {}
         payload_dic = {}
-        payload_dic["title"] = self.job_title.value
+        payload_dic["title"] = at_to_mention(
+            text=self.job_title.value, guild=interaction.guild
+        )
         payload_dic["workspace"] = (
             str(interaction.guild.id) + "/" + self.workspace.value
         )
         if self.description.value != "":
-            payload_dic["description"] = self.description.value
+            payload_dic["description"] = at_to_mention(
+                text=self.description.value, guild=interaction.guild
+            )
         if self.tags.value != "":
-            split = self.tags.value.split(", ")
+            mentions_replaced = at_to_mention(
+                text=self.tags.value, guild=interaction.guild
+            )
+            split = mentions_replaced.split(", ")
             payload_dic["tags"] = split
         if self.deadline.value != "":
             payload_dic["deadline"] = self.deadline.value
