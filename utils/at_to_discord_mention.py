@@ -34,5 +34,5 @@ def get_discord_mention(at_name: str, guild):
 def replace(text: str, guild):
     with_at = find_ats(text=text)
     for each in with_at:
-        text.replace(each, get_discord_mention(at_name=each, guild=guild))
+        text = text.replace(each, get_discord_mention(at_name=each, guild=guild))
     return text
