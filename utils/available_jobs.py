@@ -1,4 +1,4 @@
-# https://jobs-api.cotopia.social/bot/jobs/todo
+# dotenv_loader.API_BASE + /bot/jobs/todo
 # /bot/aj/me/by/{status}
 
 # get accepted out

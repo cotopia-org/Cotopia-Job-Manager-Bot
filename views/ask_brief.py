@@ -5,6 +5,7 @@ from bot_auth import create_token
 from modals.submit import JobSubmitModal
 from views.no_todo_buttons import NoTodoButtons
 from views.todo_dropdown import TodoView
+import dotenv_loader
 
 
 class AskBriefView(discord.ui.View):
@@ -59,7 +60,7 @@ class AskBriefView(discord.ui.View):
 
             headers = {"Authorization": create_token(d)}
             # sending the request
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=headers)
             data = r.json()
             status_code = r.status_code

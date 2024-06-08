@@ -10,6 +10,7 @@ from utils.at_to_discord_mention import replace as at_to_mention
 from views.start_button import StartView
 from views.start_whendoing_btns import StartWhenDoingView
 from views.submitted_job import SubmittedJobView
+import dotenv_loader
 
 
 class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
@@ -93,7 +94,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
 
         headers = {"Authorization": create_token(self.users_info)}
         payload = json.dumps(payload_dic)
-        url = "https://jobs-api.cotopia.social/bot/job"
+        url = dotenv_loader.API_BASE + "/bot/job"
         r = requests.post(url=url, data=payload, headers=headers)
         data = r.json()
 
@@ -104,7 +105,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
             # self accept
             if self.self_accept:
                 job_id = data["id"]
-                url = f"https://jobs-api.cotopia.social/bot/accept/{job_id}"
+                url = dotenv_loader.API_BASE + f"/bot/accept/{job_id}"
                 self_accept_req = requests.post(url=url, headers=headers)
                 self_accept_data = self_accept_req.json()
                 if self_accept_req.status_code == 201:
@@ -135,7 +136,7 @@ class JobSubmitModal(discord.ui.Modal, title="Submit Job"):
                 # We should check if the user has a task in doing or not
                 has_doing = False
                 doing_job_id = 0
-                url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+                url = dotenv_loader.API_BASE + "/bot/aj/me/by/doing"
                 r = requests.get(url=url, headers=headers)
                 doing_data = r.json()
                 status_code = r.status_code

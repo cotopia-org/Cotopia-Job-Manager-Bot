@@ -26,6 +26,7 @@ from views.followup_buttons import FollowupButtonsView
 from views.no_doing_buttons import NoDoingButtons
 from views.no_todo_buttons import NoTodoButtons
 from views.todo_dropdown import TodoView
+import dotenv_loader
 
 logger = settings.logging.getLogger("bot")
 
@@ -190,7 +191,7 @@ def run():
             users_info["discord_roles"] = roles_list
 
             headers = {"Authorization": create_token(users_info)}
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/doing"
             r = requests.get(url=url, headers=headers)
             data = r.json()
             status_code = r.status_code
@@ -348,7 +349,7 @@ def run():
     #     users_info["discord_roles"] = roles_list
 
     #     headers = {"Authorization": create_token(users_info)}
-    #     url = "https://jobs-api.cotopia.social/bot/accepted_jobs/me"
+    #     url = dotenv_loader.API_BASE + "/bot/accepted_jobs/me"
     #     r = requests.get(url=url, headers=headers)
     #     data = r.json()
     #     status_code = r.status_code
@@ -376,7 +377,7 @@ def run():
         users_info["discord_roles"] = roles_list
 
         headers = {"Authorization": create_token(users_info)}
-        url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+        url = dotenv_loader.API_BASE + "/bot/aj/me/by/doing"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code
@@ -390,7 +391,7 @@ def run():
             else:
                 task_index = len(data) - 1  # last one
                 job_id = data[task_index]["job"]["id"]
-                url = f"https://jobs-api.cotopia.social/bot/job/{job_id}"
+                url = dotenv_loader.API_BASE + f"/bot/job/{job_id}"
                 r = requests.get(url=url, headers=headers)
                 data = r.json()
                 status_code = r.status_code
@@ -425,7 +426,7 @@ def run():
 
         headers = {"Authorization": create_token(users_info)}
         # sending the request
-        url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+        url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code
