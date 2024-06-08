@@ -3,6 +3,7 @@ import requests
 
 from bot_auth import create_token
 from utils.job_posts import get_job_id
+import dotenv_loader
 
 
 class SubmittedJobView(discord.ui.View):
@@ -31,7 +32,7 @@ class SubmittedJobView(discord.ui.View):
             guild_id=interaction.guild.id,
         )
 
-        url = f"https://jobs-api.cotopia.social/bot/accept/{job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accept/{job_id}"
 
         r = requests.post(url=url, headers=headers)
         data = r.json()

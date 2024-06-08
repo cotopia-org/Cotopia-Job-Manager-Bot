@@ -10,6 +10,7 @@ from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
 from views.ask_brief import AskBriefView
+import dotenv_loader
 
 
 class FollowupButtonsView(discord.ui.View):
@@ -140,7 +141,7 @@ class FollowupButtonsView(discord.ui.View):
             d["discord_roles"] = roles_list
             headers = {"Authorization": create_token(d)}
             # change the status to done
-            url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+            url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
             pl = {"acceptor_status": "done"}
             r = requests.put(url=url, json=pl, headers=headers)
             data = r.json()
@@ -210,7 +211,7 @@ class FollowupButtonsView(discord.ui.View):
             d["discord_roles"] = roles_list
             headers = {"Authorization": create_token(d)}
             # change the status to todo
-            url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+            url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
             pl = {"acceptor_status": "todo"}
             r = requests.put(url=url, json=pl, headers=headers)
             data = r.json()

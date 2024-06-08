@@ -7,6 +7,7 @@ from briefing import briefing
 from status import utils as status
 from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
+import dotenv_loader
 
 
 class StartView(discord.ui.View):
@@ -22,7 +23,7 @@ class StartView(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()

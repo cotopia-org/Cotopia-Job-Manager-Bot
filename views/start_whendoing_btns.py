@@ -8,6 +8,7 @@ from status import utils as status
 from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
+import dotenv_loader
 
 
 class StartWhenDoingView(discord.ui.View):
@@ -28,7 +29,7 @@ class StartWhenDoingView(discord.ui.View):
     ):
         await interaction.response.defer()
         ## we need to move the doing task to done first
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.doing_job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.doing_job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -62,7 +63,7 @@ class StartWhenDoingView(discord.ui.View):
             # return if there's an error
             return
 
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -181,7 +182,7 @@ class StartWhenDoingView(discord.ui.View):
     ):
         await interaction.response.defer()
         ## we need to move the doing task to todo first
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.doing_job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.doing_job_id}"
         pl = {"acceptor_status": "todo"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -215,7 +216,7 @@ class StartWhenDoingView(discord.ui.View):
             # return if there's an error
             return
 
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
