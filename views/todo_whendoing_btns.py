@@ -13,6 +13,7 @@ from timetracker.utils import end as record_end
 from timetracker.utils import start as record_start
 from utils.job_posts import get_job_link, get_job_post_author_id
 from views.no_todo_buttons import NoTodoButtons
+import dotenv_loader
 
 
 class TodoWhenDoingButtons(discord.ui.View):
@@ -33,7 +34,7 @@ class TodoWhenDoingButtons(discord.ui.View):
     ):
         await interaction.response.defer()
         ## we need to move the doing task to done first
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.doing_job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.doing_job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -67,7 +68,7 @@ class TodoWhenDoingButtons(discord.ui.View):
             # return if there's an error
             return
 
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -186,7 +187,7 @@ class TodoWhenDoingButtons(discord.ui.View):
     ):
         await interaction.response.defer()
         ## we need to move the doing task to todo first
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.doing_job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.doing_job_id}"
         pl = {"acceptor_status": "todo"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -220,7 +221,7 @@ class TodoWhenDoingButtons(discord.ui.View):
             # return if there's an error
             return
 
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -333,14 +334,14 @@ class TodoWhenDoingButtons(discord.ui.View):
     @discord.ui.button(label="✅ Done", style=discord.ButtonStyle.secondary)
     async def done(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
             # sending request to get todos
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)
             data = r.json()
             status_code = r.status_code
@@ -393,7 +394,7 @@ class TodoWhenDoingButtons(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/jobs/decline/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/jobs/decline/{self.job_id}"
         r = requests.delete(url=url, headers=self.headers)
         try:
             data = r.json()
@@ -404,7 +405,7 @@ class TodoWhenDoingButtons(discord.ui.View):
             # edit the job post and remove user in acceptors
             print(f"status code: {r.status_code}\n{data}")
             # sending request to get todos
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)
             data = r.json()
             status_code = r.status_code
@@ -466,7 +467,7 @@ class TodoButtons(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "doing"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
@@ -579,14 +580,14 @@ class TodoButtons(discord.ui.View):
     @discord.ui.button(label="✅ Done", style=discord.ButtonStyle.secondary)
     async def done(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/accepted_jobs/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/accepted_jobs/{self.job_id}"
         pl = {"acceptor_status": "done"}
         r = requests.put(url=url, json=pl, headers=self.headers)
         data = r.json()
         if r.status_code == 200:
             print(f"status code: {r.status_code}\n{data}")
             # sending request to get todos
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)
             data = r.json()
             status_code = r.status_code
@@ -639,7 +640,7 @@ class TodoButtons(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         await interaction.response.defer()
-        url = f"https://jobs-api.cotopia.social/bot/jobs/decline/{self.job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/jobs/decline/{self.job_id}"
         r = requests.delete(url=url, headers=self.headers)
         try:
             data = r.json()
@@ -650,7 +651,7 @@ class TodoButtons(discord.ui.View):
             # edit the job post and remove user in acceptors
             print(f"status code: {r.status_code}\n{data}")
             # sending request to get todos
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/todo"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/todo"
             r = requests.get(url=url, headers=self.headers)
             data = r.json()
             status_code = r.status_code
@@ -739,7 +740,7 @@ class TodoDropDown(discord.ui.Select):
 
         headers = {"Authorization": create_token(d)}
         # sending the request
-        url = f"https://jobs-api.cotopia.social/bot/job/{job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/job/{job_id}"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code
@@ -748,7 +749,7 @@ class TodoDropDown(discord.ui.Select):
             # We should check if the user has a task in doing or not
             has_doing = False
             doing_job_id = 0
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/doing"
             r = requests.get(url=url, headers=headers)
             doing_data = r.json()
             status_code = r.status_code

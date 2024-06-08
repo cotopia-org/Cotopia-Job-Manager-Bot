@@ -8,6 +8,7 @@ from discord.components import SelectOption
 from bot_auth import create_token
 from views.todo_buttons import TodoButtons
 from views.todo_whendoing_btns import TodoWhenDoingButtons
+import dotenv_loader
 
 
 class TodoDropDown(discord.ui.Select):
@@ -50,7 +51,7 @@ class TodoDropDown(discord.ui.Select):
 
         headers = {"Authorization": create_token(d)}
         # sending the request
-        url = f"https://jobs-api.cotopia.social/bot/job/{job_id}"
+        url = dotenv_loader.API_BASE + f"/bot/job/{job_id}"
         r = requests.get(url=url, headers=headers)
         data = r.json()
         status_code = r.status_code
@@ -59,7 +60,7 @@ class TodoDropDown(discord.ui.Select):
             # We should check if the user has a task in doing or not
             has_doing = False
             doing_job_id = 0
-            url = "https://jobs-api.cotopia.social/bot/aj/me/by/doing"
+            url = dotenv_loader.API_BASE + "/bot/aj/me/by/doing"
             r = requests.get(url=url, headers=headers)
             doing_data = r.json()
             status_code = r.status_code
