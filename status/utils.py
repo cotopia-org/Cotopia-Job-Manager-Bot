@@ -296,7 +296,8 @@ def get_idles(guild):
         members = []
         for each in result:
             m = guild.get_member(each[0])
-            members.append(m)
+            if m is not None:
+                members.append(m)
         return members
 
 
