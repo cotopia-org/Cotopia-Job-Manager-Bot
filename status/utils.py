@@ -209,8 +209,9 @@ async def update_status_text(guild):
     # Now adding idle ones
     if idles is not None:
         for i in idles:
-            if i not in not_in_voice:
-                text = text + ":yellow_circle:  " + i.mention + "\n\n"
+            if i is not None:
+                if i not in not_in_voice:
+                    text = text + ":yellow_circle:  " + i.mention + "\n\n"
 
     # for i in not_in_voice:
     #     text = text + ":white_circle:   " + i.mention + "\n\n"
