@@ -157,11 +157,12 @@ async def update_status_text(guild):
     text = ""
 
     for i in members:
-        if i.bot is False:
-            if i.voice is None:
-                not_in_voice.append(i)
-            else:
-                in_voice.append(i)
+        if i is not None:
+            if i.bot is False:
+                if i.voice is None:
+                    not_in_voice.append(i)
+                else:
+                    in_voice.append(i)
 
     for i in in_voice:
         # check if it should record a brief
