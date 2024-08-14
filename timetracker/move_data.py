@@ -3,10 +3,11 @@
 import sqlite3
 
 import psycopg2
+from os import getenv
+from dotenv import load_dotenv
 
 
 tables = ["job_pendings", "idles", "status_txt", "job_posts"]
-
 
 
 def copy_to_postgres(table_name: str):
@@ -18,19 +19,19 @@ def copy_to_postgres(table_name: str):
     cursor.close()
     conn.close()
 
-
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
 
     for i in data:
         cursor.execute(f"INSERT INTO {table_name} VALUES{i}")
-    
+
     conn.commit()
     cursor.close()
     conn.close()

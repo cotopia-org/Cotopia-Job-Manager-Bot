@@ -3,6 +3,8 @@ import psycopg2
 
 from briefing import briefing
 from utils import job_posts
+from os import getenv
+from dotenv import load_dotenv
 
 
 async def gen_status_text(guild):
@@ -75,12 +77,13 @@ async def gen_status_text(guild):
 
     try:
         # Connect to DB and create a cursor
+        load_dotenv()
         dbConnection = psycopg2.connect(
-            host="localhost",
-            dbname="postgres",
-            user="postgres",
-            password="Tp\ZS?gfLr|]'a",
-            port=5432,
+            host=getenv("DB_HOST"),
+            dbname=getenv("DB_NAME"),
+            user=getenv("DB_USER"),
+            password=getenv("DB_PASSWORD"),
+            port=getenv("DB_PORT"),
         )
         cursor = dbConnection.cursor()
         print("DB Init")
@@ -125,12 +128,13 @@ async def gen_status_text(guild):
 
 
 def get_status_text(guild_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM status_txt WHERE guild_id = {guild_id};")
@@ -236,12 +240,13 @@ async def update_status_text(guild):
 
 
 def set_as_idle(guild_id, member_id):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -259,12 +264,13 @@ def set_as_idle(guild_id, member_id):
 
 
 def remove_idle(guild_id, member_id):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -277,12 +283,13 @@ def remove_idle(guild_id, member_id):
 
 
 def get_idles(guild):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(f"SELECT member_id FROM idles WHERE guild_id = {guild.id}")

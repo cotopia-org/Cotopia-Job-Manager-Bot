@@ -3,6 +3,8 @@ import time
 import psycopg2
 
 from timetracker.report import personal_report
+from os import getenv
+from dotenv import load_dotenv
 
 
 # returns epoch of NOW: int
@@ -22,12 +24,13 @@ async def send_personal_msg(guild, member):
 
 
 def should_send(guild_id: int, discord_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -84,12 +87,13 @@ def should_send(guild_id: int, discord_id: int):
 
 
 async def unsubscribe(member):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -106,12 +110,13 @@ async def unsubscribe(member):
 
 
 async def subscribe(member):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(

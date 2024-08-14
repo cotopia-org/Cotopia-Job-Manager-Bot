@@ -3,6 +3,8 @@ import datetime
 import time
 
 import psycopg2
+from os import getenv
+from dotenv import load_dotenv
 
 
 # ✅
@@ -20,12 +22,13 @@ def should_record_brief(doer: str, driver: str):
 
 # ✅
 def get_last_brief(doer: str, driver: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -53,12 +56,13 @@ def get_last_brief(doer: str, driver: str):
 
 
 def get_last_brief_and_id(doer: str, driver: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -87,12 +91,13 @@ def get_last_brief_and_id(doer: str, driver: str):
 
 # ✅
 def get_last_brief_epoch(doer: str, driver: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -127,12 +132,13 @@ def rightnow():
 
 # ✅
 def write_to_db(brief: str, doer: str, driver: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -147,12 +153,13 @@ def write_to_db(brief: str, doer: str, driver: str):
 
 # ✅
 def create_table():
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -175,12 +182,13 @@ def today():
 
 
 def get_last_brief_ts(doer: str, driver: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(

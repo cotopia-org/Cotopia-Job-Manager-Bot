@@ -1,16 +1,19 @@
 import psycopg2
+from os import getenv
+from dotenv import load_dotenv
 
 
 # author_id id discord_id of the one who submitted the job
 def record_id(
     job_id: int, author_id: int, post_id: int, channel_id: int, guild_id: int
 ):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -34,12 +37,13 @@ def record_id(
 
 
 def get_job_id(post_id: int, channel_id: int, guild_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -60,12 +64,13 @@ def get_job_id(post_id: int, channel_id: int, guild_id: int):
 
 
 async def get_job_link(job_id: int, guild):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -88,12 +93,13 @@ async def get_job_link(job_id: int, guild):
 
 
 def get_job_post_author_id(job_id: int, guild_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -111,12 +117,13 @@ def get_job_post_author_id(job_id: int, guild_id: int):
 
 
 async def get_job_post(job_id: int, guild):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(

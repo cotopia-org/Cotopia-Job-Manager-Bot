@@ -2,15 +2,18 @@ import psycopg2
 from persiantools.jdatetime import JalaliDateTime
 
 from utils import job_posts
+from os import getenv
+from dotenv import load_dotenv
 
 
 def get_user_events(guild_id: int, discord_id: int, start_epoch: int, end_epoch: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -159,7 +162,9 @@ async def personal_report(guild, discord_id: int, start_epoch: int, end_epoch: i
         return False
     else:
         ptext = f"Your Job Manager logs of past 72 hours in `{guild.name}`\n"
-        ptext = ptext + "If you don't wish to receive these, just send `!!unsubscribe`.\n"
+        ptext = (
+            ptext + "If you don't wish to receive these, just send `!!unsubscribe`.\n"
+        )
         del ugly_report["time"]
         del ugly_report["user"]
         ptext = ptext + "---------------------------------\n"

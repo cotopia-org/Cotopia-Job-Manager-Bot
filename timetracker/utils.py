@@ -1,6 +1,8 @@
 import time
 
 import psycopg2
+from os import getenv
+from dotenv import load_dotenv
 
 
 # returns epoch of NOW: int
@@ -10,12 +12,13 @@ def rightnow():
 
 
 def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cur = conn.cursor()
     cur.execute(
@@ -61,12 +64,13 @@ def record_event(guild_id: int, discord_id: int, isjob: bool, id: int, title: st
 
 
 def record_pending(guild_id: int, discord_id: int, event_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -90,12 +94,13 @@ def record_pending(guild_id: int, discord_id: int, event_id: int):
 
 
 def find_pending(guild_id: int, discord_id: int):
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -124,12 +129,13 @@ def start(guild_id: int, discord_id: int, isjob: bool, id: int, title: str):
         # if no Exception, continue to "end" that pending. then call start again!
         print(f"WOW, an unexpected pending found!   @{int(time.time())}")
         end_epoch = rightnow()
+        load_dotenv()
         conn = psycopg2.connect(
-            host="localhost",
-            dbname="postgres",
-            user="postgres",
-            password="Tp\ZS?gfLr|]'a",
-            port=5432,
+            host=getenv("DB_HOST"),
+            dbname=getenv("DB_NAME"),
+            user=getenv("DB_USER"),
+            password=getenv("DB_PASSWORD"),
+            port=getenv("DB_PORT"),
         )
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM job_event WHERE id = {event_id}")
@@ -172,12 +178,13 @@ def end(guild_id: int, discord_id: int):
     end_epoch = rightnow()
     try:
         event_id = find_pending(guild_id=guild_id, discord_id=discord_id)
+        load_dotenv()
         conn = psycopg2.connect(
-            host="localhost",
-            dbname="postgres",
-            user="postgres",
-            password="Tp\ZS?gfLr|]'a",
-            port=5432,
+            host=getenv("DB_HOST"),
+            dbname=getenv("DB_NAME"),
+            user=getenv("DB_USER"),
+            password=getenv("DB_PASSWORD"),
+            port=getenv("DB_PORT"),
         )
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM job_event WHERE id = {event_id}")

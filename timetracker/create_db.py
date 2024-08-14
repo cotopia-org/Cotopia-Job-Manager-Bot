@@ -1,13 +1,16 @@
 import psycopg2
+from os import getenv
+from dotenv import load_dotenv
 
 
 def create_tables():
+    load_dotenv()
     conn = psycopg2.connect(
-        host="localhost",
-        dbname="postgres",
-        user="postgres",
-        password="Tp\ZS?gfLr|]'a",
-        port=5432,
+        host=getenv("DB_HOST"),
+        dbname=getenv("DB_NAME"),
+        user=getenv("DB_USER"),
+        password=getenv("DB_PASSWORD"),
+        port=getenv("DB_PORT"),
     )
     cursor = conn.cursor()
     cursor.execute(
@@ -39,14 +42,15 @@ def create_tables():
     print("job_pendings created! @postgres")
 
     cursor.execute(
-            """CREATE TABLE IF NOT EXISTS idles(
+        """CREATE TABLE IF NOT EXISTS idles(
                                 guild_id BIGINT NOT NULL,
                                 member_id BIGINT NOT NULL); """
     )
 
     print("idles created! @postgres")
 
-    cursor.execute("""   CREATE TABLE IF NOT EXISTS status_txt(
+    cursor.execute(
+        """   CREATE TABLE IF NOT EXISTS status_txt(
                                 guild_id BIGINT NOT NULL,
                                 channel_id BIGINT NOT NULL,
                                 msg_id BIGINT NOT NULL); """
