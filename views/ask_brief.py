@@ -71,12 +71,13 @@ class AskBriefView(discord.ui.View):
                     # making a drop down menu
                     rows = []
                     for each in data:
-                        rows.append(
-                            discord.SelectOption(
-                                label=each["job"]["title"],
-                                value=each["job"]["id"],
+                        if len(rows) < 25:
+                            rows.append(
+                                discord.SelectOption(
+                                    label=each["job"]["title"],
+                                    value=each["job"]["id"],
+                                )
                             )
-                        )
 
                     todo_view = TodoView(
                         options=rows,
